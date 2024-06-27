@@ -28,3 +28,29 @@ export async function getTtcollegeTranches() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function to update payment status
+export async function updatePaymentStatus(paymentId, newStatus) {
+  try {
+    const { accessToken } = isAuthenticated();
+
+    const response = await fetch(`${ENDPOINT}/ttcollege/payment/${paymentId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update payment status");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating payment status:", error);
+    return { success: false, error: error.message };
+  }
+}

@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from 'react-router-dom';
-import { Table as AntTable } from "antd";
+import { Table as AntTable, Input as AntInput, Button } from "antd";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import {
   Box,
-  Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Heading,
   Flex,
   Spacer,
@@ -15,19 +12,35 @@ import {
   MenuItem,
   MenuList,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  FormControl,
+  FormLabel,
+  Input,
+  useDisclosure,
 } from "@chakra-ui/react";
 import Base from "../../components/Base";
-import { ChevronRightIcon, DownloadIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon } from "@chakra-ui/icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { isAuthenticated } from "../../helpers/AuthHelpers";
-import { getstudentstranch } from "../../api/ScTracker";
-import { uploadPfmsExcelApi } from "../../api/PaymentsApi/PaymentsApi"; 
-
-import * as XLSX from 'xlsx';
+import { getstudentstranch, addCandidates, getStudentTcount } from "../../api/ScTracker";
 
 function ScTracker() {
   const [college, setCollegeList] = useState([]);
+  const [filteredCollege, setFilteredCollegeList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [formValues, setFormValues] = useState({
+    Name: '',
+    ApplicationID: '',
+    WhatsappNumber: '',
+  });
   const currentUser = isAuthenticated().user.username;
 
   const columns = [
@@ -35,54 +48,31 @@ function ScTracker() {
       title: "ID",
       dataIndex: "id",
       key: "id",
-      sorter: (a, b) => a.id - b.id,
     },
     {
       title: "Beneficiary Name",
-      dataIndex: "Candidate_name",
-      key: "Candidate_name",
+      dataIndex: "Name",
+      key: "Name",
+    },
+    {
+      title: "Application Id",
+      dataIndex: "ApplicationID",
+      key: "ApplicationID",
+    },
+    {
+      title: "Whatsapp Number",
+      dataIndex: "WhatsappNumber",
+      key: "WhatsappNumber",
     },
     {
       title: "Tranches",
       dataIndex: "Tranches",
       key: "Tranches",
-      sorter: (a, b) => a.Tranches - b.Tranches,
-    },
-    // {
-    //   title: "Credited Count",
-    //   dataIndex: "creditedCount",
-    //   key: "creditedCount",
-    //   sorter: (a, b) => a.creditedCount - b.creditedCount,
-    // },
-    {
-      title: "Credited",
-      dataIndex: "Credited",
-      key: "Credited",
     },
     {
-      title: "Account Number",
-      dataIndex: "AccountNumber_AsPerBank",
-      key: "AccountNumber_AsPerBank",
-    },
-    {
-      title: "Transaction ID",
-      dataIndex: "Credit_Transaction_ID",
-      key: "Credit_Transaction_ID",
-    },
-    {
-      title: "Credit Date",
-      dataIndex: "Credit_Date",
-      key: "Credit_Date",
-    },
-    {
-      title: "Application ID",
-      dataIndex: "ApplicationID",
-      key: "ApplicationID",
-    },
-    {
-      title: "whatsapp_number ",
-      dataIndex: "whatsapp_number",
-      key: "whatsapp_number",
+      title: "Created",
+      dataIndex: "created",
+      key: "created",
     },
     {
       title: "Action",
@@ -96,9 +86,7 @@ function ScTracker() {
             <MenuItem as={Link} to={`/sc-student-details/${record.ApplicationID}`}>
               View
             </MenuItem>
-            <MenuItem
-              onClick={() => handleDelete(record.ApplicationID)}
-            >
+            <MenuItem onClick={() => handleDelete(record.ApplicationID)}>
               Delete
             </MenuItem>
           </MenuList>
@@ -107,19 +95,28 @@ function ScTracker() {
     },
   ];
 
-  const onChange = (pagination, filters, sorter, extra) => {};
-   
   const getAllColleges = async () => {
     try {
       const res = await getstudentstranch();
       if (res.success) {
-        setCollegeList(res.data);
+        const colleges = res.data;
+        // Fetch tranches data for each student
+        const tranchesDataPromises = colleges.map(async (student) => {
+          const tranchesResponse = await getStudentTcount(student.ApplicationID);
+          return { ...student, Tranches: tranchesResponse.count }; // Assuming tranches count is in tranchesResponse.count
+        });
+
+        const updatedColleges = await Promise.all(tranchesDataPromises);
+        setCollegeList(updatedColleges);
+        setFilteredCollegeList(updatedColleges);
       } else {
         setCollegeList([]);
+        setFilteredCollegeList([]);
         console.error("Failed to fetch college data:", res.error);
       }
     } catch (error) {
       setCollegeList([]);
+      setFilteredCollegeList([]);
       console.error("Error fetching college data:", error);
     }
   };
@@ -129,103 +126,69 @@ function ScTracker() {
   }, []);
 
   const handleDelete = (ApplicationID) => {
-    // Implement your delete functionality here
     console.log("Delete item with Application ID:", ApplicationID);
-    toast({
-      title: "Delete action triggered",
-      description: `Delete functionality to be implemented for Application ID: ${ApplicationID}`,
-      status: "info",
-      duration: 5000,
-      isClosable: true,
-      position: "top-right",
-    });
+    // Implement delete functionality here
   };
 
-  const downloadCSVFileOfCollegeList = () => {
-    downloadCSVFileOfCOllegeListFunctionApi()
-      .then((res) => {
-        if (res.success) {
-          const csvData = res.data
-            .map((obj) => Object.values(obj).join(","))
-            .join("\n");
-
-          const blob = new Blob([csvData], { type: "text/csv" });
-          const link = document.createElement("a");
-          link.href = window.URL.createObjectURL(blob);
-          link.download = "csvforcollegelist.csv";
-
-          document.body.appendChild(link);
-          link.click();
-
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(link.href);
-        } else {
-          console.error("Failed to download CSV:", res.error);
-        }
-      })
-      .catch((error) => {
-        console.error("Error downloading CSV:", error);
-      });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
   };
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    console.log("Selected file:", file);
-
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const binaryStr = e.target.result;
-      const workbook = XLSX.read(binaryStr, { type: "binary" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const data = XLSX.utils.sheet_to_json(sheet);
-      console.log("File content:", data);
-
-      try {
-        const response = await uploadPfmsExcelApi(data);
-        if (response.success) {
-          getAllColleges(); // Refresh the college list
-          toast({
-            title: "File uploaded",
-            description: "File data has been successfully uploaded.",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-            position: "top-right",
-          });
-        } else {
-          console.error("Failed to upload file data:", response.error);
-          toast({
-            title: "Error",
-            description: "Failed to upload file data.",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "top-right",
-          });
-        }
-      } catch (error) {
-        console.error("Error uploading file data:", error);
+  const handleAddStudent = async () => {
+    try {
+      const response = await addCandidates(formValues);
+      if (response && response.success) {
+        onClose();
+        toast({
+          title: "Student added",
+          description: `Student ${formValues.Name} added successfully`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+        // Refresh the data after adding a student
+        getAllColleges();
+      } else {
         toast({
           title: "Error",
-          description: "An error occurred while uploading the file data.",
+          description: response.message || "Failed to add student",
           status: "error",
           duration: 5000,
           isClosable: true,
           position: "top-right",
         });
       }
-    };
-    reader.readAsBinaryString(file);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while adding the student",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+      console.error("Error adding student:", error);
+    }
+  };
 
-    toast({
-      title: "File upload",
-      description: `File selected: ${file.name}`,
-      status: "info",
-      duration: 5000,
-      isClosable: true,
-      position: "top-right",
-    });
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    const lowercasedSearchTerm = e.target.value.toLowerCase();
+    if (lowercasedSearchTerm === "") {
+      setFilteredCollegeList(college); // Show all data when search term is empty
+    } else {
+      const filtered = college.filter((student) => {
+        const nameMatches = typeof student.Name === 'string' && student.Name.toLowerCase().includes(lowercasedSearchTerm);
+        const whatsappMatches = typeof student.WhatsappNumber === 'string' && student.WhatsappNumber.toLowerCase().includes(lowercasedSearchTerm);
+        return nameMatches || whatsappMatches;
+      });
+      setFilteredCollegeList(filtered);
+    }
   };
 
   return (
@@ -234,22 +197,8 @@ function ScTracker() {
         <Flex>
           <Box>
             <Heading as="h4" size={"md"} my={2}>
-              Tranch Tracker 
+              Tranch Tracker
             </Heading>
-
-            <Button onClick={downloadCSVFileOfCollegeList}>
-              <DownloadIcon />
-            </Button>
-
-            <Button as="label" colorScheme="blue" ml={2}>
-              Upload
-              <input
-                type="file"
-                accept=".csv, .xlsx, .xls"
-                hidden
-                onChange={handleFileUpload}
-              />
-            </Button>
 
             <Breadcrumb
               spacing="8px"
@@ -272,23 +221,78 @@ function ScTracker() {
             </Breadcrumb>
           </Box>
           <Spacer />
+          <Box>
+            <AntInput
+              placeholder="Search by name or Whatsapp number"
+              value={searchTerm}
+              onChange={handleSearch}
+              style={{ width: '300px', marginRight: '8px' }}
+            />
+            <Button colorScheme="teal" onClick={onOpen}>
+              Add Student
+            </Button>
+          </Box>
         </Flex>
       </Box>
+
       <Box bg="white" my={3}>
         <AntTable
           rowKey={"id"}
           columns={columns}
-          dataSource={college}
-          onChange={onChange}
+          dataSource={filteredCollege} // Bind dataSource to filteredCollege
           bordered={true}
           loading={false}
         />
       </Box>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add Student</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl id="Name" isRequired>
+              <FormLabel>Student Name</FormLabel>
+              <Input
+                name="Name"
+                value={formValues.Name}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+            <FormControl id="ApplicationID" isRequired>
+              <FormLabel>Application Id</FormLabel>
+              <Input
+                name="ApplicationID"
+                value={formValues.ApplicationID}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+            <FormControl id="WhatsappNumber" isRequired>
+              <FormLabel>Whatsapp Number</FormLabel>
+              <Input
+                name="WhatsappNumber"
+                value={formValues.WhatsappNumber}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleAddStudent}>
+              Add Student
+            </Button>
+            <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Base>
   );
 }
 
 export default ScTracker;
+
+
+
 
 
 

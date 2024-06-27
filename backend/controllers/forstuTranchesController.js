@@ -1,57 +1,11 @@
 const { Sequelize, Op } = require("sequelize");
 const forstu_tranches = require("../models/forstu_tranchesModel");
-
-// Function to get all tranches with tranches count
-exports.getForstuTranches = async (req, res) => {
-    try {
-        // Fetch all data from the database
-        const data = await forstu_tranches.findAll({});
-
-        // Calculate the tranches count
-        const tranchesCounts = await forstu_tranches.findAll({
-            attributes: [
-                'ApplicationID',
-                [Sequelize.fn('COUNT', Sequelize.col('ApplicationID')), 'tranchesCount']
-            ],
-            group: ['ApplicationID']
-        });
-
-        // Create a mapping of ApplicationID to tranchesCount
-        const tranchesCountMap = {};
-        tranchesCounts.forEach((entry) => {
-            tranchesCountMap[entry.ApplicationID] = entry.dataValues.tranchesCount;
-        });
-
-        // Append counts to the data
-        const uniqueData = [];
-        const seenApplicationIDs = new Set();
-
-        data.forEach(entry => {
-            if (!seenApplicationIDs.has(entry.ApplicationID)) {
-                entry.dataValues.Tranches = tranchesCountMap[entry.ApplicationID] || 0;
-                uniqueData.push(entry);
-                seenApplicationIDs.add(entry.ApplicationID);
-            }
-        });
-
-        // Respond with the enhanced data
-        res.json({
-            success: true,
-            data: uniqueData,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Failed to retrieve data from forstu_tranches",
-            error: error.message || "An error occurred",
-        });
-    }
-};
-
+const ForstuCandidates = require("../models/forstu_candidatesModel");
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Function to get all tranches
+//this function is used in SCTracker and Tranch Tracker College
+// Function to get all tranches 
 exports.getAllForstuTranches = (req, res) => {
     forstu_tranches
     .findAll({})
@@ -73,103 +27,211 @@ exports.getAllForstuTranches = (req, res) => {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Function to get students by ApplicationID
-exports.getStudentByApplicationId = (req, res) => {
-    const applicationId = req.params.ApplicationID;
-    console.log("Searching for ApplicationID:", applicationId);
-    forstu_tranches
-      .findAll({
-        where: {
-          ApplicationID: applicationId,
-        },
-      })
-      .then((students) => {
-        if (students.length === 0) {
-          return res.status(404).json({
-            success: false,
-            message: "No students found with the given ApplicationID",
-          });
-        }
+// // Function to get students by ApplicationID
+// exports.getStudentByApplicationId = (req, res) => {
+//     const applicationId = req.params.ApplicationID;
+//     console.log("Searching for ApplicationID:", applicationId);
+//     forstu_tranches
+//       .findAll({
+//         where: {
+//           ApplicationID: applicationId,
+//         },
+//       })
+//       .then((students) => {
+//         if (students.length === 0) {
+//           return res.status(404).json({
+//             success: false,
+//             message: "No students found with the given ApplicationID",
+//           });
+//         }
   
-        res.json({
+//         res.json({
+//           success: true,
+//           data: students,
+//         });
+//       })
+//       .catch((error) => {
+//         res.status(500).json({
+//           success: false,
+//           message: "Failed to retrieve students by ApplicationID",
+//           error: error.message || "An error occurred",
+//         });
+//       });
+// };
+
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+exports.addTranchData = (req, res) => {
+    const { name, status, tranchAmount, ApplicationID, tranch, creditDate} = req.body;
+    
+    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",req.body);
+
+    const errors = [];
+  
+    // Validate each field and collect error messages
+    if (!name) errors.push("Name is required");
+    if (!status) errors.push("Status is required");
+    if (!tranchAmount) errors.push("Amount is required");
+    if (!ApplicationID) errors.push("Application ID is required");
+    if (!tranch) errors.push("Tranch is required");
+    if (!creditDate) errors.push("Credited Date is required");
+  
+    // If there are any validation errors, return them
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation failed",
+        errors: errors
+      });
+    }
+  
+    // Create a new tranch record
+    forstu_tranches
+      .create({
+        Name: name, // Assuming Candidate_name maps to Name in your model
+        Status: status,
+        Amount: tranchAmount, // Assuming amount maps to Amount in your model
+        ApplicationID,
+        Tranch: tranch, // Assuming tranch maps to Tranch in your model
+        Credited_Date: creditDate, // Assuming Credit_Date maps to Credited_Date in your model
+
+      })
+      .then((newTranche) => {
+        res.status(201).json({
           success: true,
-          data: students,
+          message: "Tranch data added successfully",
+          data: newTranche,
         });
       })
       .catch((error) => {
         res.status(500).json({
           success: false,
-          message: "Failed to retrieve students by ApplicationID",
+          message: "Failed to add tranch data",
           error: error.message || "An error occurred",
         });
       });
-};
+  };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-exports.addTranchData = (req, res) => {
-  const { 
-    Candidate_name, 
-    gender, 
-    dob, 
-    whatsapp_number, 
-    Credit_Date, 
-    ApplicationID, 
-    credited, 
-    amount, 
-    tranch 
-  } = req.body;
+// // Function to get all tranches with tranches count
+// exports.getForstuTranches = async (req, res) => {
+//   try {
+//       // Fetch all data from the database
+//       const data = await forstu_tranches.findAll({});
+
+//       // Calculate the tranches count
+//       const tranchesCounts = await forstu_tranches.findAll({
+//           attributes: [
+//               'ApplicationID',
+//               [Sequelize.fn('COUNT', Sequelize.col('ApplicationID')), 'tranchesCount']
+//           ],
+//           group: ['ApplicationID']
+//       });
+
+//       // Create a mapping of ApplicationID to tranchesCount
+//       const tranchesCountMap = {};
+//       tranchesCounts.forEach((entry) => {
+//           tranchesCountMap[entry.ApplicationID] = entry.dataValues.tranchesCount;
+//       });
+
+//       // Append counts to the data
+//       const uniqueData = [];
+//       const seenApplicationIDs = new Set();
+
+//       data.forEach(entry => {
+//           if (!seenApplicationIDs.has(entry.ApplicationID)) {
+//               entry.dataValues.Tranches = tranchesCountMap[entry.ApplicationID] || 0;
+//               uniqueData.push(entry);
+//               seenApplicationIDs.add(entry.ApplicationID);
+//           }
+//       });
+
+//       // Respond with the enhanced data
+//       res.json({
+//           success: true,
+//           data: uniqueData,
+//       });
+//   } catch (error) {
+//       res.status(500).json({
+//           success: false,
+//           message: "Failed to retrieve data from forstu_tranches",
+//           error: error.message || "An error occurred",
+//       });
+//   }
+// };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//this adds data in forstu_candidates
+//fetches data from SCTracker section from website
+exports.addCandidateData = (req, res) => {
+  const { Name, ApplicationID, WhatsappNumber } = req.body;
+
+  console.log("Received candidate data:", req.body);
 
   const errors = [];
 
   // Validate each field and collect error messages
-  if (!Candidate_name) errors.push("Candidate_name is required");
-  if (!gender) errors.push("Gender is required");
-  if (!dob) errors.push("DOB is required");
-  if (!whatsapp_number) errors.push("Whatsapp number is required");
-  if (!Credit_Date) errors.push("Credit date is required");
+  if (!Name) errors.push("Name is required");
   if (!ApplicationID) errors.push("Application ID is required");
-  if (credited === undefined) errors.push("Credited field is required");
-  if (amount === undefined) errors.push("Amount is required");
-  if (!tranch) errors.push("Tranch is required");
+  if (!WhatsappNumber) errors.push("WhatsApp Number is required");
 
   // If there are any validation errors, return them
   if (errors.length > 0) {
-    return res.status(400).json({
-      success: false,
-      message: "Validation failed",
-      errors: errors
-    });
+      return res.status(400).json({
+          success: false,
+          message: "Validation failed",
+          errors: errors
+      });
   }
 
-  // Create a new tranch record
-  forstu_tranches
-    .create({
-      Candidate_name,
-      gender,
-      dob,
-      whatsapp_number,
-      Credit_Date,
-      ApplicationID,
-      credited,
-      amount,
-      tranch,
-    })
-    .then((newTranche) => {
+  // Create a new candidate record
+  ForstuCandidates.create({
+      Name: Name, 
+      ApplicationID: ApplicationID, 
+      WhatsappNumber: WhatsappNumber
+  })
+  .then((newCandidate) => {
       res.status(201).json({
-        success: true,
-        message: "Tranch data added successfully",
-        data: newTranche,
+          success: true,
+          message: "Candidate data added successfully",
+          data: newCandidate,
       });
-    })
-    .catch((error) => {
+  })
+  .catch((error) => {
       res.status(500).json({
-        success: false,
-        message: "Failed to add tranch data",
-        error: error.message || "An error occurred",
+          success: false,
+          message: "Failed to add candidate data",
+          error: error.message || "An error occurred",
       });
-    });
+  });
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Function to get the count of candidates by ApplicationID
+exports.getCandidateCountByApplicationId = (req, res) => {
+  const applicationId = req.params.ApplicationID;
+  console.log("Counting candidates for ApplicationID:", applicationId);
+
+  forstu_tranches
+      .count({
+          where: {
+              ApplicationID: applicationId,
+          },
+      })
+      .then((count) => {
+          res.json({
+              success: true,
+              count,
+          });
+      })
+      .catch((error) => {
+          res.status(500).json({
+              success: false,
+              message: "Failed to retrieve candidate count by ApplicationID",
+              error: error.message || "An error occurred",
+          });
+      });
+};

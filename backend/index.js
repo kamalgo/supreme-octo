@@ -24,7 +24,8 @@ const csvRoutes = require("./routes/csvRoutes1");
 const shravaniRoutes = require("../backend/routes/shravaniRoutes");
 const studentRoutes = require("../backend/routes/studentsRoutes")
 const forstutranchesRoutes = require("../backend/routes/forstuTranchesRoutes");
-const ttcollegeRoutes = require("../backend/routes/ttCollegeRoutes")
+const ttcollegeRoutes = require("../backend/routes/ttCollegeRoutes");
+const forstuCandidates = require("../backend/routes/forstuCandidatesRoutes")
 
 dotenv.config();
 // comment
@@ -60,9 +61,9 @@ app.use("/api", dropdownRoutes);
 app.use("/api", jarRoutes);
 app.use("/api", shravaniRoutes);
 app.use("/api", studentRoutes);
-app.use("/api", forstutranchesRoutes)
-app.use("/api", ttcollegeRoutes)
-
+app.use("/api", forstutranchesRoutes);
+app.use("/api", ttcollegeRoutes);
+app.use("/api", forstuCandidates)
 
 // app.js or index.js
 
