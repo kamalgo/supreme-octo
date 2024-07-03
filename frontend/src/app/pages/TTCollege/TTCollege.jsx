@@ -213,6 +213,10 @@ const TTCollege = () => {
 
   return (
     <Base>
+    <div>
+      <h1>{role === ROLES.ADMIN ? "Admin Users Page" : "College Users Page"}</h1>
+      {/* Content */}
+    </div>
       <Box p={5}>
         <Breadcrumb spacing="8px" separator={<ChevronRightIcon color="gray.500" />}>
           <BreadcrumbItem>

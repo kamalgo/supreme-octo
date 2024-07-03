@@ -59,10 +59,16 @@ const Login = () => {
           authenticate(res, () => {
             const { role } = isAuthenticated().user;
             switch (role) {
+
               case ROLES.ADMIN:
                 return navigate.replace("/dashboard/admin");
-              case ROLES.STUDENT:
+
+                case ROLES.COLLEGE:
+                  return navigate.replace("/dashboard/college"); 
+
+                case ROLES.STUDENT:
                 return navigate.replace("/dashboard/student");
+
               default:
                 return navigate.replace("/");
             }

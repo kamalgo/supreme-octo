@@ -25,6 +25,7 @@ import ScStudentDetails from "./pages/ScTracker/ScStudentDetails"; // Uncommente
 // import HelloPage from "./pages/ScTracker/HelloPage";
 import Payments from "./pages/Payments/Payments";
 import TTCollege from "./pages/TTCollege/TTCollege";
+import CDashboard from "./pages/CDashboard/CDashboard";
 
 function App() {
   return (
@@ -47,12 +48,21 @@ function App() {
           path="/microsite/login"
           component={MicrositeLogin}
         />
+
         <ProtectedRoute
           exact
           path="/dashboard/admin"
           component={AdminDashboard}
           role={ROLES.ADMIN}
         />
+        
+        <ProtectedRoute
+          exact
+          path="/dashboard/college"
+          component={CDashboard}
+          role={ROLES.COLLEGE}
+        />
+
         <ProtectedRoute
           exact
           path="/dashboard/admin/users"
@@ -135,9 +145,9 @@ function App() {
 
         <ProtectedRoute
           exact
-          path="/dashboard/admin/ttcollege"
+          path="/dashboard/college/ttcollege"
           component={TTCollege}
-          role={ROLES.ADMIN}
+          role={ROLES.COLLEGE}
         />
 
         {/* 404 route */}

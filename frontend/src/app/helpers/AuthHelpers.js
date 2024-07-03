@@ -9,6 +9,7 @@ export const isAuthenticated = () => {
   if (typeof window !== "undefined") {
     if (JSON.parse(localStorage.getItem("forstu"))) {
       return JSON.parse(localStorage.getItem("forstu"));
+      
     }
     return false;
   }

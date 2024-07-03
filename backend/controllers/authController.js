@@ -312,6 +312,17 @@ exports.isStudent = (req, res, next) => {
   }
 };
 
+
+exports.isCollege = (req, res, next) => {
+  const { role } = req.profile;
+  if (role == ROLES.COLLEGE) {
+    next();
+  } else {
+    return res.status(403).json({ status: false, message: "Forbidden!" });
+  }
+};
+
+
 // exports.changePassword = (req, res) => {
 //   try {
 //     const { id } = req.profile;

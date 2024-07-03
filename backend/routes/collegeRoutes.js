@@ -21,7 +21,7 @@ const {
   // deleteUsers,
 } = require("../controllers/collegeController");
 
-const { isSignedIn, isAdmin } = require("../controllers/authController");
+const { isSignedIn, isAdmin, isCollege } = require("../controllers/authController");
 // const {
 //   getUserValidationSchema,
 //   // addUserValidationSchema,
@@ -33,17 +33,17 @@ const { isSignedIn, isAdmin } = require("../controllers/authController");
 
 const router = express.Router();
 
-router.get("/getAllCollegeProfiles", isSignedIn, isAdmin, getAllCollegeProfile);
+router.get("/getAllCollegeProfiles", isSignedIn, isAdmin, isCollege, getAllCollegeProfile, );
 
 // router.get("/getCollegeProfile", isSignedIn, isAdmin, getUserValidationSchema, getCollegeProfile);
 
 // router.get("/getSingleCollegeProfile/id", getSingleCollegeProfile);
 
-router.post("/createNewCollegeProfile", isSignedIn, isAdmin, addCollegeProfile);
+router.post("/createNewCollegeProfile", isSignedIn, isAdmin, isCollege, addCollegeProfile);
 
-router.put("/updatecollegeProfile", isSignedIn, isAdmin, updateCollegeProfile);
+router.put("/updatecollegeProfile", isSignedIn, isAdmin, isCollege, updateCollegeProfile);
 
-router.delete("/deletecollegeProfile", isSignedIn, isAdmin, deleteCollegeProfile);
+router.delete("/deletecollegeProfile", isSignedIn, isAdmin, isCollege, deleteCollegeProfile);
 
 router.get("/getqualificationlevel", getQualificationlevel);
 router.get("/getstreamlevel", getStramlevel);
@@ -54,7 +54,7 @@ router.put("/updatequalificationinfo",isSignedIn, updateQualification_Stream);
 
 router.delete("/deletequalificationinfo", isSignedIn, deleteQualification_Stream);
 
-router.get("/getAllQualificationinfo", isSignedIn, isAdmin, getQualificationInfoByCollegeId);
+router.get("/getAllQualificationinfo", isSignedIn, isAdmin, isCollege, getQualificationInfoByCollegeId);
 
 // router.delete("/deletecollegeProfile", isSignedIn, isAdmin, getUserValidationSchema, deleteCollegeProfile);
 

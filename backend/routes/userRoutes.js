@@ -13,7 +13,7 @@ const {
   // deleteUsers,
 } = require("../controllers/usersController");
 
-const { isSignedIn, isAdmin } = require("../controllers/authController");
+const { isSignedIn, isAdmin, isCollege } = require("../controllers/authController");
 const {
   getUserValidationSchema,
   deleteUserValidationSchema,
@@ -40,7 +40,7 @@ router.get("/user", isSignedIn, isAdmin, getUserValidationSchema, getUser);
 
 // router.get("/user/recent", isSignedIn, isAdmin, getrecentUsers);
 
-router.post("/user", isSignedIn, isAdmin, addUser);
+router.post("/user", isSignedIn, isAdmin, addUser, isCollege);
 
 // router.put(
 //   "/user",
@@ -55,7 +55,8 @@ router.delete(
   isSignedIn,
   isAdmin,
   deleteUserValidationSchema,
-  deleteUser
+  deleteUser,
+  isCollege
 );
 
 router.delete(
@@ -63,7 +64,8 @@ router.delete(
   isSignedIn,
   isAdmin,
   UsersValidationSchemaForIds,
-  deleteUsers
+  deleteUsers,
+  isCollege
 );
 
 router.get("/profile", isSignedIn, getUserProfile);
