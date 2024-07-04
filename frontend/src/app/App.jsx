@@ -26,6 +26,7 @@ import ScStudentDetails from "./pages/ScTracker/ScStudentDetails"; // Uncommente
 import Payments from "./pages/Payments/Payments";
 import TTCollege from "./pages/TTCollege/TTCollege";
 import CDashboard from "./pages/CDashboard/CDashboard";
+import Stc from "./pages/STC/Stc";
 
 function App() {
   return (
@@ -142,14 +143,22 @@ function App() {
           component={Payments}
           role={ROLES.ADMIN}
         />
-
+{/* 
         <ProtectedRoute
           exact
-          path="/dashboard/college/ttcollege"
+          path="/dashboard/admin/ttcollege"
           component={TTCollege}
+          role={ROLES.ADMIN}
+        /> */}
+
+        
+        <ProtectedRoute
+          exact
+          path="/dashboard/college/stc"
+          component={Stc}
           role={ROLES.COLLEGE}
         />
-
+        
         {/* 404 route */}
         {/* <Route path="*">
           <PageNotFound />

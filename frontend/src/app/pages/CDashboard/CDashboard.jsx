@@ -120,7 +120,7 @@ const CDashboard = () => {
             >
               <BreadcrumbItem>
                 <BreadcrumbLink>
-                  <NavLink to="/dashboard">Dashboard</NavLink>
+                  <NavLink to="/dashboard/college">Dashboard</NavLink>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem isCurrentPage>
