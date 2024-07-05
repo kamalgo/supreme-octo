@@ -1001,11 +1001,13 @@ exports.sendDatatoDB = async (req, res) => {
   Mahadbtprofiles.update(req.body, {
     // Specify the condition for the update
     where: {
-      id: req.body.id,
+      id: req.body.id,     
     },
   })
     .then((result) => {
       console.log("result", result);
+      console.log("id bahi", req.body.id);
+      
       // The result is an array where the first element is the number of updated rows
       // console.log(`${result[0]} row(s) updated`);
       // res.status(200).json({ message: ` row(s) updated` });

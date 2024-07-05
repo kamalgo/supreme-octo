@@ -25,6 +25,10 @@ const ForstuCandidates = sequelize.define("forstu_candidates", {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') // Set default value to current timestamp
+    },
+    refID: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
     }
 }, {
     timestamps: false, // Disable timestamps

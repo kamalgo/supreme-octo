@@ -40,6 +40,7 @@ function ScTracker() {
     Name: '',
     ApplicationID: '',
     WhatsappNumber: '',
+    ReferenceID: '', // Added Reference ID field
   });
   const currentUser = isAuthenticated().user.username;
 
@@ -52,6 +53,11 @@ function ScTracker() {
     {
       title: "Beneficiary Name",
       dataIndex: "Name",
+      key: "Name",
+    },
+    {
+      title: "Ref ID",
+      dataIndex: "refID",
       key: "Name",
     },
     {
@@ -272,6 +278,14 @@ function ScTracker() {
               <Input
                 name="WhatsappNumber"
                 value={formValues.WhatsappNumber}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+            <FormControl id="ReferenceID" isRequired>
+              <FormLabel>Reference ID</FormLabel>
+              <Input
+                name="ReferenceID"
+                value={formValues.ReferenceID}
                 onChange={handleInputChange}
               />
             </FormControl>

@@ -166,7 +166,7 @@ exports.addTranchData = (req, res) => {
 //this adds data in forstu_candidates
 //fetches data from SCTracker section from website
 exports.addCandidateData = (req, res) => {
-  const { Name, ApplicationID, WhatsappNumber } = req.body;
+  const { Name, ApplicationID, WhatsappNumber, ReferenceID } = req.body;
 
   console.log("Received candidate data:", req.body);
 
@@ -176,7 +176,7 @@ exports.addCandidateData = (req, res) => {
   if (!Name) errors.push("Name is required");
   if (!ApplicationID) errors.push("Application ID is required");
   if (!WhatsappNumber) errors.push("WhatsApp Number is required");
-
+  if (!ReferenceID) errors.push("Reference ID is required")
   // If there are any validation errors, return them
   if (errors.length > 0) {
       return res.status(400).json({
@@ -190,7 +190,8 @@ exports.addCandidateData = (req, res) => {
   ForstuCandidates.create({
       Name: Name, 
       ApplicationID: ApplicationID, 
-      WhatsappNumber: WhatsappNumber
+      WhatsappNumber: WhatsappNumber,
+      refID: ReferenceID
   })
   .then((newCandidate) => {
       res.status(201).json({
