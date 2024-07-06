@@ -55,7 +55,7 @@ const {
   getSubmittedStudentsView,
 } = require("../controllers/mahadbtController");
 
-const{sendDatatoDBpostman} = require("../controllers/updateMahadbt_Profiles")
+const{UPTE, UPTA} = require("../controllers/updateMahadbt_Profiles")
 
 const {
   isSignedIn,
@@ -173,7 +173,9 @@ router.delete("/flushdataofdb", flushdata);
 // for microsite routes for students
 router.put("/submitFormData", sendDatatoDB);
 
-router.put("/emailupdates", sendDatatoDBpostman);
+router.put("/UPTE", UPTE); //UPTE update profile through email
+router.put("/UPTA", UPTA); //UPTA update profile through email
+
 
 // ROutes for uploading Documents
 router.put("/submitcastedocument", sendCasteDocumentToS3);

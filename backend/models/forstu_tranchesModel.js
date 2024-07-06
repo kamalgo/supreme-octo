@@ -39,6 +39,10 @@ const ForstuTranches = sequelize.define("forstu_tranches", {
         type: DataTypes.DATE,
         allowNull: true,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+    },
+    refID: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
     }
 }, {
     timestamps: false, // Disable timestamps
