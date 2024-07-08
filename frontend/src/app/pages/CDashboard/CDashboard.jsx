@@ -10,57 +10,28 @@ import {
   BreadcrumbLink,
   useToast,
 } from "@chakra-ui/react";
-import { ChevronRightIcon } from "@chakra-ui/icons";
-import { NavLink } from 'react-router-dom';
+import { Grid, GridItem } from "@chakra-ui/react";
 import Base from "../../components/Base"; // Make sure this import path is correct based on your project structure
+import Total from './CDashboardComponents.jsx/Total';
+import T1T2 from './CDashboardComponents.jsx/T1T2';
 
 const CDashboard = () => {
-  const toast = useToast();
-
-  const handleButtonClick = () => {
-    toast({
-      title: "Action Triggered",
-      description: "You clicked the button",
-      status: "info",
-      duration: 5000,
-      isClosable: true,
-      position: "top-right",
-    });
-  };
 
   return (
     <Base>
-      <Box py={5} px={5} bg={"gray.100"} borderWidth="1px" borderRadius="lg">
-        <Flex>
-          <Box>
-            <Heading as="h4" size={"md"} my={2}>
-              College Dashboard
-            </Heading>
-            <Breadcrumb
-              spacing="8px"
-              separator={<ChevronRightIcon color="gray.500" />}
-              fontSize={15}
-            >
-              <BreadcrumbItem>
-                <BreadcrumbLink>
-                  <NavLink to="/dashboard/college">Dashboard</NavLink>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem isCurrentPage>
-                <BreadcrumbLink>College Dashboard</BreadcrumbLink>
-              </BreadcrumbItem>
-            </Breadcrumb>
-          </Box>
-          <Spacer />
-          <Box>
-            <Button colorScheme="teal" onClick={handleButtonClick}>
-              Trigger Action
-            </Button>
-          </Box>
-        </Flex>
-      </Box>
+      <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+        <GridItem w="100%" bg={"#FFFBF5"} borderRadius={"10px"}>
+          <Total />
+        </GridItem>
+
+        <GridItem w="100%" bg={"#FFFBF5"} borderRadius={"10px"}>
+          <T1T2 />
+        </GridItem>
+
+      </Grid>
     </Base>
   );
 }
 
 export default CDashboard;
+

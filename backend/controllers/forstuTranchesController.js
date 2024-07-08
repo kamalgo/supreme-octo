@@ -236,3 +236,56 @@ exports.getCandidateCountByApplicationId = (req, res) => {
           });
       });
 };
+
+///////////////////////////////////////////////////////////////////////////////////
+
+// Function to get the count of all candidates
+exports.getForstuTranchesCount = (req, res) => {
+    forstu_tranches
+        .count()
+        .then((count) => {
+            console.log('Count retrieved:', count);
+            res.json({
+                success: true,
+                count,
+            });
+        })
+        .catch((error) => {
+            res.status(500).json({
+                success: false,
+                message: "Failed to count the data from forstu_candidates",
+                error: error.message || "An error occurred",
+            });
+        });
+};
+
+/////////////////////////////////////////////////////////////////////////////////////
+// Function to get the count of Tranch
+// 8 July 2024 this is not working properly
+exports.getForstuTranch1Count = (req, res) => {
+    forstu_tranches
+        .count({ Tranch: 1 }) // Count documents where tranch equals 1
+        .then((count) => {
+            console.log('Count retrieved:', count);
+            if (count === 1) {
+                res.json({
+                    success: true,
+                    count,
+                    message: "Only one document found with tranch equals 1 in forstu_tranches.",
+                });
+            } else {
+                res.json({
+                    success: true,
+                    count,
+                });
+            }
+        })
+        .catch((error) => {
+            res.status(500).json({
+                success: false,
+                message: "Failed to count the data from forstu_candidates",
+                error: error.message || "An error occurred",
+            });
+        });
+};
+
