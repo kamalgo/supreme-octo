@@ -28,9 +28,7 @@ exports.getTtcollegeTranches = async (req, res) => {
 exports.updatePaymentStatus = async (req, res) => {
     const { paymentId } = req.params;
     const { status } = req.body;
-
-
-
+    
     try {
         // Find payment by ID
         const payment = await ForstuTranches.findByPk(paymentId);

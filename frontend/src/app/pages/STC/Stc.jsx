@@ -297,7 +297,9 @@ import {
 import Base from "../../components/Base";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import moment from 'moment';
-import { getTtcollegeTranches, updatePaymentStatus } from "../../api/TTCollegeApi/TTCollegeApi";
+// import { getTtcollegeTranches, updatePaymentStatus } from "../../api/TTCollegeApi/TTCollegeApi";
+
+import { getTtcollegeTranches, updatePaymentStatus } from '../../api/StcApi/StcApi';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;

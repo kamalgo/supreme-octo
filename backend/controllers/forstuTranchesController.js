@@ -261,24 +261,16 @@ exports.getForstuTranchesCount = (req, res) => {
 
 /////////////////////////////////////////////////////////////////////////////////////
 // Function to get the count of Tranch
-// 8 July 2024 this is not working properly
-exports.getForstuTranch1Count = (req, res) => {
+exports.getForstuTranchOneCount = (req, res) => {
     forstu_tranches
-        .count({ Tranch: 1 }) // Count documents where tranch equals 1
+        .count({ where: {Tranch: 1} }) // Count documents where tranch equals 1
         .then((count) => {
             console.log('Count retrieved:', count);
-            if (count === 1) {
                 res.json({
                     success: true,
                     count,
-                    message: "Only one document found with tranch equals 1 in forstu_tranches.",
+                    message: "Tranche 1 received count",
                 });
-            } else {
-                res.json({
-                    success: true,
-                    count,
-                });
-            }
         })
         .catch((error) => {
             res.status(500).json({
@@ -289,3 +281,46 @@ exports.getForstuTranch1Count = (req, res) => {
         });
 };
 
+/////////////////////////////////////////////////////////////////////////////////////
+// Function to get the count of Tranch
+exports.getForstuTranchTwoCount = (req, res) => {
+    forstu_tranches
+        .count({ where: {Tranch: 2} }) // Count documents where tranch equals 1
+        .then((count) => {
+            console.log('Count retrieved:', count);
+                res.json({
+                    success: true,
+                    count,
+                    message: "Tranche 2 received count",
+                });
+        })
+        .catch((error) => {
+            res.status(500).json({
+                success: false,
+                message: "Failed to count the data from forstu_candidates",
+                error: error.message || "An error occurred",
+            });
+        });
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function to get the grand total of amount_receivable
+exports.getTotalAmountReceived = (req, res) => {
+    forstu_tranches
+        .sum('Amount')
+        .then((totalAmount) => {
+            console.log('Total amount retrieved:', totalAmount);
+            res.json({
+                success: true,
+                totalAmount,
+            });
+        })
+        .catch((error) => {
+            res.status(500).json({
+                success: false,
+                message: "Failed to retrieve the total amount from forstu_candidates",
+                error: error.message || "An error occurred",
+            });
+        });
+};

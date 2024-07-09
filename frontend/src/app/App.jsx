@@ -24,7 +24,6 @@ import ScTracker from "./pages/ScTracker/ScTracker";
 import ScStudentDetails from "./pages/ScTracker/ScStudentDetails"; // Uncommented
 // import HelloPage from "./pages/ScTracker/HelloPage";
 import Payments from "./pages/Payments/Payments";
-import TTCollege from "./pages/TTCollege/TTCollege";
 import CDashboard from "./pages/CDashboard/CDashboard";
 import Stc from "./pages/STC/Stc";
 
@@ -143,14 +142,6 @@ function App() {
           component={Payments}
           role={ROLES.ADMIN}
         />
-{/* 
-        <ProtectedRoute
-          exact
-          path="/dashboard/admin/ttcollege"
-          component={TTCollege}
-          role={ROLES.ADMIN}
-        /> */}
-
         
         <ProtectedRoute
           exact

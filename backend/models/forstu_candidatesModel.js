@@ -29,6 +29,11 @@ const ForstuCandidates = sequelize.define("forstu_candidates", {
     refID: {
         type: DataTypes.STRING(255),
         allowNull: true,
+    },
+    amount_receivable: { // Add this field
+        type: DataTypes.DECIMAL(10, 2), // Adjust the type and size as needed
+        allowNull: false,
+        defaultValue: 0.00
     }
 }, {
     timestamps: false, // Disable timestamps

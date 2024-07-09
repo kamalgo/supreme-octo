@@ -540,7 +540,6 @@ const AdminMenu = [
 
 const CollegeMenu = [
   { name: "Dashboard", icon: MdDashboard, path: "/dashboard/college" },
-  { name: "TT College", icon: MdGroup, path: "/dashboard/admin/ttcollege" },
   { name: "Tranch Tracker College", icon: FiEye , path: "/dashboard/college/stc" },
 
 ];

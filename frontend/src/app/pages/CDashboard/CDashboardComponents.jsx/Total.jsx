@@ -6,38 +6,35 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 
-import {
-  getCandidatesCountApi,
-  getForstuTranchesCountApi,
-} from "../../../api/DashboardApi/CDashboardApi";
+import { getTotalAmountReceivableApi, getTotalAmountReceivedApi } from "../../../api/DashboardApi/CDashboardApi";
 
 function Total() {
-  const [totalStudent, setTotalStudent] = useState(0);
-  const [totalEligible, setTotalEligible] = useState(0);
+  const [totalReceived, setTotalReceived] = useState(0);
+  const [totalReceivable, setTotalReceivable] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch total eligible students
-        const eligibleResponse = await getCandidatesCountApi();
-        if (eligibleResponse && eligibleResponse.success) {
-          setTotalEligible(eligibleResponse.count);
+        // Fetch total receivable amount
+        const receivableResponse = await getTotalAmountReceivableApi();
+        if (receivableResponse && receivableResponse.success) {
+          setTotalReceivable(receivableResponse.totalAmount); // Updated to use 'totalAmount'
         } else {
-          setTotalEligible(0);
+          setTotalReceivable(0);
         }
 
-        // Fetch total scholarship beneficiaries
-        const totalStudentsResponse = await getForstuTranchesCountApi();
-        if (totalStudentsResponse && totalStudentsResponse.success) {
-          setTotalStudent(totalStudentsResponse.count);
+        // Fetch total received amount
+        const receivedResponse = await getTotalAmountReceivedApi();
+        if (receivedResponse && receivedResponse.success) {
+          setTotalReceived(receivedResponse.totalAmount);
         } else {
           setTotalStudent(0);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
         // Handle errors, set defaults or show error message
-        setTotalEligible(0);
-        setTotalStudent(0);
+        setTotalReceivable(0);
+        setTotalReceived(0);
       }
     };
 
@@ -54,15 +51,15 @@ function Total() {
     >
       <Box mb="20px" bg="#FFE7C1" p="20px" borderRadius="20px">
         <Stat>
-          <StatLabel>Total Enrolled Students</StatLabel>
-          <StatNumber>{totalEligible}</StatNumber>
+          <StatLabel>Total Amount Receivable</StatLabel>
+          <StatNumber>{totalReceivable}</StatNumber> {/* Updated to use totalReceivable */}
         </Stat>
       </Box>
 
       <Box bg="#FFE7C1" p="20px" borderRadius="20px">
         <Stat>
-          <StatLabel>Scholarship Beneficiaries</StatLabel>
-          <StatNumber>{totalStudent}</StatNumber>
+          <StatLabel>Total Amount Received</StatLabel>
+          <StatNumber>{totalReceived}</StatNumber>
         </Stat>
       </Box>
     </Box>

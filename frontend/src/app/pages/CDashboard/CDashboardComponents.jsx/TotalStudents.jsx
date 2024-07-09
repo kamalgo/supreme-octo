@@ -1,5 +1,3 @@
-//this code prints Tranche 1 and Tranche 2 count
-
 import { Box } from "@chakra-ui/layout";
 import React, { useEffect, useState } from "react";
 import {
@@ -8,9 +6,9 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 
-import { getForstuTranchOneCountApi, getForstuTranchTwoCountApi } from "../../../api/DashboardApi/CDashboardApi";
+import { getCandidatesCountApi, getForstuTranchTwoCountApi } from "../../../api/DashboardApi/CDashboardApi";
 
-function Total() {
+function TotalStudents() {
   const [totalReceived, setTotalReceived] = useState(0);
   const [totalReceivable, setTotalReceivable] = useState(0);
 
@@ -18,7 +16,7 @@ function Total() {
     const fetchData = async () => {
       try {
         // Fetch total receivable amount
-        const receivableResponse = await getForstuTranchOneCountApi();
+        const receivableResponse = await getCandidatesCountApi();
         if (receivableResponse && receivableResponse.success) {
           setTotalReceivable(receivableResponse.count); // Updated to use 'totalAmount'
         } else {
@@ -53,14 +51,14 @@ function Total() {
     >
       <Box mb="20px" bg="#FFE7C1" p="20px" borderRadius="20px">
         <Stat>
-          <StatLabel>Tranche 1 Received</StatLabel>
+          <StatLabel>Total Students Count </StatLabel>
           <StatNumber>{totalReceivable}</StatNumber> {/* Updated to use totalReceivable */}
         </Stat>
       </Box>
 
       <Box bg="#FFE7C1" p="20px" borderRadius="20px">
         <Stat>
-          <StatLabel>Tranche 2 Received</StatLabel>
+          <StatLabel>Count of Students who have received scholarship</StatLabel>
           <StatNumber>{totalReceived}</StatNumber>
         </Stat>
       </Box>
@@ -68,4 +66,5 @@ function Total() {
   );
 }
 
-export default Total;
+export default TotalStudents;
+
