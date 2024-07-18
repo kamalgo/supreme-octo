@@ -62,7 +62,7 @@ exports.getAllForstuTranches = (req, res) => {
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 exports.addTranchData = (req, res) => {
-    const { name, status, tranchAmount, ApplicationID, tranch, creditDate} = req.body;
+    const { name, status, tranchAmount, ApplicationID, tranch, creditDate, referenceId} = req.body;
     
     console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",req.body);
 
@@ -75,6 +75,8 @@ exports.addTranchData = (req, res) => {
     if (!ApplicationID) errors.push("Application ID is required");
     if (!tranch) errors.push("Tranch is required");
     if (!creditDate) errors.push("Credited Date is required");
+    if (!referenceId) errors.push("refID is required");
+
   
     // If there are any validation errors, return them
     if (errors.length > 0) {
@@ -94,7 +96,7 @@ exports.addTranchData = (req, res) => {
         ApplicationID,
         Tranch: tranch, // Assuming tranch maps to Tranch in your model
         Credited_Date: creditDate, // Assuming Credit_Date maps to Credited_Date in your model
-
+        refID : referenceId
       })
       .then((newTranche) => {
         res.status(201).json({

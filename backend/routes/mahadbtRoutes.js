@@ -1,4 +1,7 @@
 const express = require("express");
+
+const{UPTE, UPTA, createProfileBot, fetchBlankRecordsByAadhaar, editStudent} = require("../controllers/updateMahadbt_Profiles")
+
 const {
   getAllMahadbtProfiles,
   findMahadbtProfCount,
@@ -55,7 +58,6 @@ const {
   getSubmittedStudentsView,
 } = require("../controllers/mahadbtController");
 
-const{UPTE, UPTA} = require("../controllers/updateMahadbt_Profiles")
 
 const {
   isSignedIn,
@@ -173,9 +175,14 @@ router.delete("/flushdataofdb", flushdata);
 // for microsite routes for students
 router.put("/submitFormData", sendDatatoDB);
 
-router.put("/UPTE", UPTE); //UPTE update profile through email
-router.put("/UPTA", UPTA); //UPTA update profile through email
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// API's for whatsapp chatbot
+router.put("/UPTE", isSignedIn, UPTE); // UPTE update profile through email
+router.put("/UPTA", isSignedIn, UPTA); // UPTA update profile through email
+router.post("/createProfileBot", createProfileBot); //creates a new profile record
+router.get("/fetchBlankRecordsByAadhaar",isSignedIn, fetchBlankRecordsByAadhaar);
+router.put("/editStudent", editStudent);
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ROutes for uploading Documents
 router.put("/submitcastedocument", sendCasteDocumentToS3);

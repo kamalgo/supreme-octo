@@ -305,108 +305,146 @@ const ScStudentDetails = () => {
 
   return (
     <Base>
+      <style>{datePickerStyles}</style>
       <Box p={4}>
         <Breadcrumb spacing="8px" separator={<ChevronRightIcon color="gray.500" />}>
           <BreadcrumbItem>
             <BreadcrumbLink href="#">Home</BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">SC</BreadcrumbLink>
-          </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href="#">Student Details</BreadcrumbLink>
+            <BreadcrumbLink href="#">StudentDetails</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
-      </Box>
-      <Box p={4}>
-        <Heading as="h3" size="lg">Student Details</Heading>
-      </Box>
-      <Box p={4}>
-        <Flex mb={4}>
-          <Box>
-            <Button leftIcon={<DownloadIcon />} colorScheme="blue" onClick={downloadCSVFileOfCollegeList}>Download CSV</Button>
-          </Box>
-          <Spacer />
-          <Box>
-            <Button colorScheme="teal" onClick={openModalCharge}>Charge Subscription</Button>
-            <Button colorScheme="green" ml={2} onClick={openModalAddTranch}>Add Tranch</Button>
-          </Box>
+        <Flex alignItems="center" justifyContent="space-between" mt={4}>
+          <Heading as="h1" size="lg">
+            Student Details
+          </Heading>
+          <Flex alignItems="center">
+            <Button colorScheme="blue" mr={4} onClick={downloadCSVFileOfCollegeList}>
+              Download CSV
+            </Button>
+            <Button colorScheme="blue" mr={4} onClick={openModalCharge}>
+              Charge Subscription
+            </Button>
+            <Button colorScheme="blue" onClick={openModalAddTranch}>
+              Add Tranch
+            </Button>
+          </Flex>
         </Flex>
-        <AntTable dataSource={students} columns={columns} rowKey="id" />
-      </Box>
-      <Modal isOpen={isModalOpenCharge} onClose={closeModalCharge}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Charge Subscription</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl mb={4}>
-              <FormLabel>Scheduled On</FormLabel>
-              <DatePicker onChange={(date) => setScheduledOn(date)} style={{ width: '100%' }} />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Amount</FormLabel>
-              <Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Remarks</FormLabel>
-              <Textarea value={remarks} onChange={(e) => setRemarks(e.target.value)} />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Merchant Transaction ID</FormLabel>
-              <Input type="text" value={merchantTxnId} isReadOnly />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleCharge}>Submit</Button>
-            <Button variant="ghost" onClick={closeModalCharge}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        <AntTable columns={columns} dataSource={students} rowKey="id" pagination={false} />
 
-      <Modal isOpen={isModalOpenAddTranch} onClose={closeModalAddTranch}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add Tranch</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl mb={4}>
-              <FormLabel>Name</FormLabel>
-              <Input type="text" value={name} isReadOnly />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Tranch</FormLabel>
-              <Input type="text" value={tranch} onChange={(e) => setTranch(e.target.value)} />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Amount</FormLabel>
-              <Input type="number" value={tranchAmount} onChange={(e) => setTranchAmount(e.target.value)} />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Credit Date</FormLabel>
-              <DatePicker onChange={(date) => setCreditDate(date)} style={{ width: '100%' }} />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Status</FormLabel>
-              <Input type="text" value={status} onChange={(e) => setStatus(e.target.value)} />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Reference ID</FormLabel>
-              <Input type="text" value={referenceId} onChange={(e) => setReferenceId(e.target.value)} />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleAddTranch}>Submit</Button>
-            <Button variant="ghost" onClick={closeModalAddTranch}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        {/* Modal for Charge Subscription */}
+        <Modal isOpen={isModalOpenCharge} onClose={closeModalCharge}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Charge Subscription</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl mb={4}>
+                <FormLabel>Scheduled On</FormLabel>
+                <DatePicker
+                  value={scheduledOn}
+                  onChange={(date) => setScheduledOn(date)}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Amount</FormLabel>
+                <Input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Remarks</FormLabel>
+                <Textarea
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
+                />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={handleCharge}>
+                Submit
+              </Button>
+              <Button variant="ghost" onClick={closeModalCharge}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        {/* Modal for Adding Tranch */}
+        <Modal isOpen={isModalOpenAddTranch} onClose={closeModalAddTranch}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Add Tranch</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl mb={4}>
+                <FormLabel>Tranch</FormLabel>
+                <Input
+                  type="text"
+                  value={tranch}
+                  onChange={(e) => setTranch(e.target.value)}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Tranch Amount</FormLabel>
+                <Input
+                  type="number"
+                  value={tranchAmount}
+                  onChange={(e) => setTranchAmount(e.target.value)}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Credit Date</FormLabel>
+                <DatePicker
+                  value={creditDate}
+                  onChange={(date) => setCreditDate(date)}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Status</FormLabel>
+                <Input
+                  type="text"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Reference ID</FormLabel>
+                <Input
+                  type="text"
+                  value={referenceId}
+                  onChange={(e) => setReferenceId(e.target.value)}
+                />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={handleAddTranch}>
+                Submit
+              </Button>
+              <Button variant="ghost" onClick={closeModalAddTranch}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Box>
     </Base>
   );
 };
 
 export default ScStudentDetails;
-
 
 
 

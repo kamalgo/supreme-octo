@@ -140,7 +140,7 @@ export async function studentprofileviewApi(data) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//addStudent, this api will add student on the manual insertion from GUI on the Students section 
+//addStudent, this api will add student on the manual insertion from GUI on the Students section
 
 export async function addStudent(data) {
   console.log("data is on StudentApis bus stop ", data);
@@ -159,7 +159,7 @@ export async function addStudent(data) {
 
     // Check if the response status is 401 and handle token expiration
     if (response.status === 401) {
-      console.log('Token expired, redirecting...');
+      console.log("Token expired, redirecting...");
       redirectOnTokenExpire();
       return;
     }
@@ -168,12 +168,12 @@ export async function addStudent(data) {
     const responseData = await response.json();
 
     // Log the response data to the console
-    console.log('Response from backend:', responseData);
+    console.log("Response from backend:", responseData);
 
     return responseData;
   } catch (error) {
     // Handle any errors that occur during the fetch operation
-    console.error('Error adding student:', error);
+    console.error("Error adding student:", error);
   }
 }
 
@@ -198,27 +198,26 @@ export async function getStudentsViewApi() {
   return response.json();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// export async function addStudent(data) {
-//   console.log("data is on StudentApis bus stop ", data);
-//   const { accessToken } = isAuthenticated();
+export async function editStudentApi(data) {
+  const { accessToken } = isAuthenticated();
 
-//   const response = await fetch(`${ENDPOINT}/addS`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Accept: "application/json",
-//       Authorization: accessToken,
-//     },
-//     body: JSON.stringify(data),
-//   });
+  console.log("data in editstudentapi",data);
 
-//   if (response.status == 401) {
-//     console.log('aaaaa',reponse);
-//     redirectOnTokenExpire();
-//   }
+  const response = await fetch(`${ENDPOINT}/editStudent`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: accessToken,
+    },
+    body: JSON.stringify(data),
+  });
 
-//   return response.json();
-// }
+  if (response.status == 401) {
+    redirectOnTokenExpire();
+  }
 
-
+  return response.json();
+}

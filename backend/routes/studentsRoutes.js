@@ -4,6 +4,7 @@
 const express = require("express");
 
 const {addStudent, getAllTheStudents} = require('../controllers/studentsController');
+const {editStudent} = require('../controllers/updateMahadbt_Profiles')
 
 const router = express.Router();  // Initialize router
 
@@ -12,6 +13,9 @@ router.post("/addS", addStudent);
 
 //this is used to get all the students
 router.get("/getallthestudents", getAllTheStudents);
+
+//this route is used to update data on the basis of the id
+router.put("/editStudent", editStudent)
 
 module.exports = router;
 

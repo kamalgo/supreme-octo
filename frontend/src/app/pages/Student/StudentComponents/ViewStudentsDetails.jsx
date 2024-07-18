@@ -1,47 +1,111 @@
-//I think this file is not used -Kamal
+// import React, { useEffect, useState } from "react";
+// import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+// import Base from "../../../components/Base";
+// import { studentprofileviewApi } from "../../../api/Student/StudentApis";
+// import { ExternalLinkIcon } from "@chakra-ui/icons";
+// import Edit_Prsnl_Info_Modal from "./Edit_Prsnl_Info_Modal";
+
+// // import { Grid, GridItem } from "@chakra-ui/react";
+// import {
+//   Accordion,
+//   AccordionItem,
+//   AccordionButton,
+//   AccordionPanel,
+//   AccordionIcon,
+//   Link,
+// } from "@chakra-ui/react";
+// import { Box, Center, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+
+// function ViewStudentsDetails() {
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [selectedId, setSelectedId] = useState(null);
+//   const [viewData, setViewData] = useState([]);
+//   const location = useLocation();
+
+//   console.log(location.state?.id);
+  
+//   if (location.state?.id === undefined) {
+//     return <div>No data</div>;
+//   }
+
+//   const getprofileviewFunction = () => {
+//     // console.log("details", id);
+//     console.log("getprofileviewFunction called!!!");
+
+//     console.log("testMe clicked");
+
+//     let data = {
+//       id: location.state?.id,
+//     };
+//     studentprofileviewApi(data)
+//       .then((res) => {
+//         console.log("res", res);
+//         setViewData(res.data);
+//         // setFormData(res.data);
+//       })
+//       .catch((err) => {
+//         console.log("err", err);
+//       });
+//   };
+
+//   useEffect(() => {
+//     getprofileviewFunction();
+//   }, []);
+
+//   console.log("viewData", viewData.admissionType);
+
+//   /////////////////////////////////////////////////////////////////////////////
+//   // let dataid = {
+//   //   id: location.state?.id
+//   // };
+//   // console.log("dataid", dataid);
+
+//   // const openModalWithId = (dataid) => {
+//   //   setSelectedId(dataid.id);
+//   //   setIsModalOpen(true);
+//   // };
+
+//    // Function to open modal with selected ID
+//    const openModalWithId = () => {
+//     setSelectedId(location.state.id); // Set selectedId to the ID from location state
+//     setIsModalOpen(true); // Open the modal
+//   };
+
+//   console.log("select", selectedId);
 
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { useLocation } from "react-router-dom";
 import Base from "../../../components/Base";
 import { studentprofileviewApi } from "../../../api/Student/StudentApis";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Box, Heading, SimpleGrid, Link, Text } from "@chakra-ui/react";
+import { ExternalLinkIcon } from "@chakra-ui/icons"; // Import ExternalLinkIcon from Chakra UI
 
-// import { Grid, GridItem } from "@chakra-ui/react";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Link,
-} from "@chakra-ui/react";
-import { Box, Center, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import Edit_Prsnl_Info_Modal from "./Edit_Prsnl_Info_Modal";
 
 function ViewStudentsDetails() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   const [viewData, setViewData] = useState([]);
   const location = useLocation();
+
   console.log(location.state?.id);
-  if (location.state?.id === undefined) {
+  
+  if (!location.state?.id) {
     return <div>No data</div>;
   }
 
   const getprofileviewFunction = () => {
-    // console.log("details", id);
     console.log("getprofileviewFunction called!!!");
-
-    console.log("testMe clicked");
-
     let data = {
-      id: location.state?.id,
+      id: location.state.id,
     };
     studentprofileviewApi(data)
       .then((res) => {
-        console.log("res", res);
+        console.log("Student profile view data:", res.data);
         setViewData(res.data);
-        // setFormData(res.data);
       })
       .catch((err) => {
-        console.log("err", err);
+        console.log("Error fetching student profile view data:", err);
       });
   };
 
@@ -50,6 +114,14 @@ function ViewStudentsDetails() {
   }, []);
 
   console.log("viewData", viewData.admissionType);
+
+  const openModalWithId = () => {
+    setSelectedId(location.state.id);
+    setIsModalOpen(true);
+  };
+
+  console.log("Selected ID:", selectedId);
+
 
   return (
     <div>
@@ -63,6 +135,35 @@ function ViewStudentsDetails() {
                     Personal Information
                   </Heading>
                 </Box>
+                <button
+  style={{
+    marginLeft: "auto",
+    padding: "5px 10px",
+    fontSize: "14px",
+    backgroundColor: "#3182CE",
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+    borderRadius: "4px",
+    zIndex: 2,
+  }}
+  onClick={(e) => {
+    e.stopPropagation();
+    openModalWithId();
+  }}
+>
+{/* <NavLink
+                  to={{
+                // pathname: "/dashboard/admin/student/view",
+                // state: { id: record.id },
+              }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+
+                  </NavLink>   */}
+                  Edit
+</button>
+
                 <AccordionIcon />
               </AccordionButton>
             </h2>
@@ -2312,6 +2413,8 @@ function ViewStudentsDetails() {
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
+        <Edit_Prsnl_Info_Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} id={selectedId} />
+
       </Base>
     </div>
   );

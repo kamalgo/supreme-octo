@@ -1571,6 +1571,12 @@ const Mahadbtprofiles = sequelize.define("mahadbt_profiles", {
     allowNull: true,
     field: 'aadhaar_card',
   },
+  //aadhaar_link_mob_no
+  aadhaarlinkmobno: {
+    type: Sequelize.DataTypes.STRING(12),
+    allowNull: true,
+    field: 'aadhaar_link_mob_no',
+  },
 });
 
 

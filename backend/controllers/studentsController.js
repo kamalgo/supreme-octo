@@ -1,53 +1,74 @@
 const { Sequelize } = require("sequelize");
 const Mahadbtprofiles = require("../models/candidate_infoModel");
 
-// Function to get students
 async function getAllTheStudents(req, res) {
   try {
     const data = await Mahadbtprofiles.findAll({});
-    console.log("your data req", data);
+    console.log("Retrieved data:", data);
     res.json({
       success: true,
       data,
     });
   } catch (error) {
+    console.error("Error retrieving students:", error);
     res.status(500).json({
       success: false,
-      message: "Failed to retrieve College Profile",
+      message: "Failed to retrieve students",
       error: error.message,
     });
   }
 }
 
-// Function to add a new student
 async function addStudent(req, res) {
   try {
-    // Log the data received from the frontend
     console.log("Received student data:", req.body);
-    
-    // Create a new student record in the database
     const newStudent = await Mahadbtprofiles.create(req.body);
-    
-    // Send a response with the newly created student data
     res.status(201).json(newStudent);
   } catch (error) {
-    // Log the error
     console.error("Error adding student:", error);
-
-    // You can choose to handle the error differently based on the specific error type
     if (error instanceof Sequelize.ValidationError) {
-      // Handle validation errors
       res.status(400).json({ error: "Validation error", message: error.message });
     } else {
-      // Handle other types of errors
       res.status(500).json({ error: "Internal server error", message: error.message });
     }
   }
 }
 
+// async function editStudent(req, res) {
+//   try {
+//     console.log("Received updated student data:", req.body);
+//     const id = parseInt(req.body.id, 10);
+//     if (isNaN(id)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Invalid ID",
+//       });
+//     }
+//     const student = await Mahadbtprofiles.findByPk(id);
+//     if (!student) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Student not found",
+//       });
+//     }
+//     const result = await Mahadbtprofiles.update(req.body, {
+//       where: {
+//         id: id,
+//       },
+//     });
+//     console.log("Rows updated:", result[0]);
+//     res.status(200).json({
+//       success: true,
+//       message: `${result[0]} row(s) updated`,
+//     });
+//   } catch (error) {
+//     console.error("Error updating student:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// }
+
 module.exports = {
   getAllTheStudents,
   addStudent,
+  // editStudent,
 };
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
