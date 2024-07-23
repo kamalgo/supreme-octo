@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Input, Button, Modal, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import Base from "../../components/Base";
-import { fetchstud, castecertS3 } from "../../api/Doc_Upload/Doc_UploadApi";
+import { fetchstud, castecertS3, sendFeeReceiptToS3, sendHostelCertificateToS3, sendAlpabudharakCertificateToS3, sendLabourCertificateToS3 } from "../../api/Doc_Upload/Doc_UploadApi";
 
 const { Search } = Input;
 
@@ -63,13 +63,25 @@ function Doc_Upload() {
     setSelectedRecord(null); // Clear selected record after closing the modal
   };
 
-  const handleUpload = async ({ file, onSuccess, onError }) => {
+  const handleUpload = async ({ file, onSuccess, onError }, type) => {
     const formData = new FormData();
-    formData.append('video', file);  // Changed field name to 'video'
+    formData.append(type, file);  // Use the type parameter to distinguish between different file uploads
     formData.append('id', selectedRecord.id);
 
     try {
-      const response = await castecertS3(formData);
+      let response;
+      if (type === 'incomedocument') {
+        response = await castecertS3(formData);
+      } else if (type === 'feereceipt') {
+        response = await sendFeeReceiptToS3(formData);
+      } else if (type === 'hostelcertificate') {
+        response = await sendHostelCertificateToS3(formData);
+      } else if (type === 'alpabudharakcertificate') {
+        response = await sendAlpabudharakCertificateToS3(formData);
+      } else if (type === 'labourcertificate') {
+        response = await sendLabourCertificateToS3(formData);
+      }
+
       if (response.success) {
         message.success(`${file.name} file uploaded successfully.`);
         onSuccess();
@@ -145,10 +157,46 @@ function Doc_Upload() {
               <div style={{ marginTop: 20 }}>
                 <p><strong>Caste Certificate:</strong></p>
                 <Upload
-                  customRequest={handleUpload}
+                  customRequest={(options) => handleUpload(options, 'incomedocument')}  // Use type 'incomedocument'
                   showUploadList={false}
                 >
                   <Button icon={<UploadOutlined />}>Upload Caste Certificate</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Fee Receipt:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'feereceipt')}  // Use type 'feereceipt'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Fee Receipt</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Hostel Certificate:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'hostelcertificate')}  // Use type 'hostelcertificate'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Hostel Certificate</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Alpabudharak Certificate:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'alpabudharakcertificate')}  // Use type 'alpabudharakcertificate'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Alpabudharak Certificate</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Registered Labour Certificate:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'labourcertificate')}  // Use type 'labourcertificate'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Registered Labour Certificate</Button>
                 </Upload>
               </div>
             </div>
@@ -160,5 +208,3 @@ function Doc_Upload() {
 }
 
 export default Doc_Upload;
-
-

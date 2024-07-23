@@ -56,6 +56,7 @@ const {
   sendHostelDocumentToS3,
   getPendingStudentsView,
   getSubmittedStudentsView,
+  sendFeeReceiptToS3,sendHostelCertificateToS3, sendAlpabudharakCertificateToS3, sendLabourCertificateToS3 
 } = require("../controllers/mahadbtController");
 
 
@@ -200,6 +201,10 @@ router.put("/submit10thmarksheetdocument", send10thMarksheetDocumentToS3);
 router.put("/submit12thmarksheetdocument", send12thMarksheetDocumentToS3);
 router.put("/submitgapdocument", sendGapDocumentToS3);
 router.put("/submithosteldocument", sendHostelDocumentToS3);
+router.put("/sendFeeReceiptToS3", sendFeeReceiptToS3);
+router.put("/sendHostelCertificateToS3", sendHostelCertificateToS3);
+router.put("/sendAlpabudharakCertificateToS3",sendAlpabudharakCertificateToS3);
+router.put("/sendLabourCertificateToS3", sendLabourCertificateToS3 )
 // router.put("/submi", sendIncomeDocumentToS3);
 
 router.post("/getPersonalInfo", personalInfo);

@@ -1865,6 +1865,270 @@ exports.sendHostelDocumentToS3 = async (req, res) => {
   // const uploadedObjectUrls = await Promise.all(s3UploadPromises);
 };
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+exports.sendFeeReceiptToS3 = async (req, res) => {
+  try {
+    const file = req.files.feereceipt;
+    const uploadParams = {
+      Bucket: "mahadbtdocs",
+      Key: `${req.body.id}/feereceipt/${file.name}`,
+      Body: file.data,
+    };
+
+    const listParams = {
+      Bucket: "mahadbtdocs",
+      Prefix: `${req.body.id}/feereceipt/`,
+    };
+
+    // List all objects in the folder
+    const listResponse = await s3.send(new ListObjectsV2Command(listParams));
+
+    // Extract keys of objects in the folder
+    const keys = listResponse?.Contents?.map((object) => ({ Key: object.Key }));
+
+    if (keys?.length > 0) {
+      // Create a command to delete the objects
+      const deleteParams = {
+        Bucket: "mahadbtdocs",
+        Delete: {
+          Objects: keys,
+          Quiet: false, // Set to true to suppress successful delete responses
+        },
+      };
+      // Send the delete command to S3
+      const deleteResponse = await s3.send(new DeleteObjectsCommand(deleteParams));
+      console.log("Objects in the folder deleted successfully:", deleteResponse.Deleted);
+    }
+
+    const data = await s3.send(new PutObjectCommand(uploadParams));
+
+    // Construct the URL of the uploaded object manually
+    const objectUrl = `https://${uploadParams.Bucket}.s3.${AWS.config.region}.amazonaws.com/${uploadParams.Key}`;
+
+    const updatedDataOfMain = {
+      feeReceipt: objectUrl,
+    };
+    console.log("updatedDataOfMain", updatedDataOfMain);
+
+    // Update database entry
+    await Mahadbtprofiles.update(updatedDataOfMain, {
+      where: {
+        id: req.body.id,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `${objectUrl} file(s) uploaded to S3 and database entry updated successfully.`,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+exports.sendHostelCertificateToS3 = async (req, res) => {
+  try {
+    const file = req.files.hostelcertificate;
+    const uploadParams = {
+      Bucket: "mahadbtdocs",
+      Key: `${req.body.id}/hostelcertificate/${file.name}`,
+      Body: file.data,
+    };
+
+    const listParams = {
+      Bucket: "mahadbtdocs",
+      Prefix: `${req.body.id}/hostelcertificate/`,
+    };
+
+    // List all objects in the folder
+    const listResponse = await s3.send(new ListObjectsV2Command(listParams));
+
+    // Extract keys of objects in the folder
+    const keys = listResponse?.Contents?.map((object) => ({ Key: object.Key }));
+
+    if (keys?.length > 0) {
+      // Create a command to delete the objects
+      const deleteParams = {
+        Bucket: "mahadbtdocs",
+        Delete: {
+          Objects: keys,
+          Quiet: false, // Set to true to suppress successful delete responses
+        },
+      };
+      // Send the delete command to S3
+      const deleteResponse = await s3.send(
+        new DeleteObjectsCommand(deleteParams)
+      );
+      console.log(
+        "Objects in the folder deleted successfully:",
+        deleteResponse.Deleted
+      );
+    }
+
+    const data = s3.send(new PutObjectCommand(uploadParams));
+
+    // Construct the URL of the uploaded object manually
+    const objectUrl = `https://${uploadParams.Bucket}.s3.${AWS.config.region}.amazonaws.com/${uploadParams.Key}`;
+
+    const updatedDataOfMain = {
+      casteDoc: objectUrl,
+    };
+    console.log("updatedDataOfMain", updatedDataOfMain);
+
+    // Update database entry
+    await Mahadbtprofiles.update(updatedDataOfMain, {
+      where: {
+        id: req.body.id,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `${objectUrl} file(s) uploaded to S3 and database entry updated successfully.`,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+exports.sendAlpabudharakCertificateToS3 = async (req, res) => {
+  try {
+    const file = req.files.alpabudharakcertificate;
+    const uploadParams = {
+      Bucket: "mahadbtdocs",
+      Key: `${req.body.id}/alpabudharakcertificate/${file.name}`,
+      Body: file.data,
+    };
+
+    const listParams = {
+      Bucket: "mahadbtdocs",
+      Prefix: `${req.body.id}/alpabudharakcertificate/`,
+    };
+
+    // List all objects in the folder
+    const listResponse = await s3.send(new ListObjectsV2Command(listParams));
+
+    // Extract keys of objects in the folder
+    const keys = listResponse?.Contents?.map((object) => ({ Key: object.Key }));
+
+    if (keys?.length > 0) {
+      // Create a command to delete the objects
+      const deleteParams = {
+        Bucket: "mahadbtdocs",
+        Delete: {
+          Objects: keys,
+          Quiet: false, // Set to true to suppress successful delete responses
+        },
+      };
+      // Send the delete command to S3
+      const deleteResponse = await s3.send(
+        new DeleteObjectsCommand(deleteParams)
+      );
+      console.log(
+        "Objects in the folder deleted successfully:",
+        deleteResponse.Deleted
+      );
+    }
+
+    const data = s3.send(new PutObjectCommand(uploadParams));
+
+    // Construct the URL of the uploaded object manually
+    const objectUrl = `https://${uploadParams.Bucket}.s3.${AWS.config.region}.amazonaws.com/${uploadParams.Key}`;
+
+    const updatedDataOfMain = {
+      casteDoc: objectUrl,
+    };
+    console.log("updatedDataOfMain", updatedDataOfMain);
+
+    // Update database entry
+    await Mahadbtprofiles.update(updatedDataOfMain, {
+      where: {
+        id: req.body.id,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `${objectUrl} file(s) uploaded to S3 and database entry updated successfully.`,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+exports.sendLabourCertificateToS3 = async (req, res) => {
+  try {
+    const file = req.files.registeredlabourcertificate;
+    const uploadParams = {
+      Bucket: "mahadbtdocs",
+      Key: `${req.body.id}/registeredlabourcertificate/${file.name}`,
+      Body: file.data,
+    };
+
+    const listParams = {
+      Bucket: "mahadbtdocs",
+      Prefix: `${req.body.id}/registeredlabourcertificate/`,
+    };
+
+    // List all objects in the folder
+    const listResponse = await s3.send(new ListObjectsV2Command(listParams));
+
+    // Extract keys of objects in the folder
+    const keys = listResponse?.Contents?.map((object) => ({ Key: object.Key }));
+
+    if (keys?.length > 0) {
+      // Create a command to delete the objects
+      const deleteParams = {
+        Bucket: "mahadbtdocs",
+        Delete: {
+          Objects: keys,
+          Quiet: false, // Set to true to suppress successful delete responses
+        },
+      };
+      // Send the delete command to S3
+      const deleteResponse = await s3.send(
+        new DeleteObjectsCommand(deleteParams)
+      );
+      console.log(
+        "Objects in the folder deleted successfully:",
+        deleteResponse.Deleted
+      );
+    }
+
+    const data = s3.send(new PutObjectCommand(uploadParams));
+
+    // Construct the URL of the uploaded object manually
+    const objectUrl = `https://${uploadParams.Bucket}.s3.${AWS.config.region}.amazonaws.com/${uploadParams.Key}`;
+
+    const updatedDataOfMain = {
+      casteDoc: objectUrl,
+    };
+    console.log("updatedDataOfMain", updatedDataOfMain);
+
+    // Update database entry
+    await Mahadbtprofiles.update(updatedDataOfMain, {
+      where: {
+        id: req.body.id,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `${objectUrl} file(s) uploaded to S3 and database entry updated successfully.`,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // exports.sendDatatoDB = async (req, res) => {
 //   try {
 //     // let files = req.files.video;
