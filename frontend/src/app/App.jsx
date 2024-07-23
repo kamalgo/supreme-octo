@@ -26,6 +26,7 @@ import ScStudentDetails from "./pages/ScTracker/ScStudentDetails"; // Uncommente
 import Payments from "./pages/Payments/Payments";
 import CDashboard from "./pages/CDashboard/CDashboard";
 import Stc from "./pages/STC/Stc";
+import Doc_Upload from "./pages/Doc_Upload/Doc_Upload";
 
 function App() {
   return (
@@ -149,7 +150,16 @@ function App() {
           component={Stc}
           role={ROLES.COLLEGE}
         />
+
+{/* Doc_Upload */}
         
+        <ProtectedRoute
+          exact
+          path="/dashboard/admin/Doc_Upload"
+          component={Doc_Upload}
+          role={ROLES.ADMIN}
+        />
+
         {/* 404 route */}
         {/* <Route path="*">
           <PageNotFound />

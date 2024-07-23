@@ -81,12 +81,21 @@ import { Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIco
 import { ExternalLinkIcon } from "@chakra-ui/icons"; // Import ExternalLinkIcon from Chakra UI
 
 import Edit_Prsnl_Info_Modal from "./Edit_Prsnl_Info_Modal";
+import Upload_Document_Modal from "./Upload_Document_Modal";
 
 function ViewStudentsDetails() {
+
+  //modal for edit personal 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [viewData, setViewData] = useState([]);
+  
+  //modal for upload
+  const [isModalOpenUpload,setisModalOpenUpload] = useState(false);
+
+
   const location = useLocation();
+
 
   console.log(location.state?.id);
   
@@ -120,12 +129,31 @@ function ViewStudentsDetails() {
     setIsModalOpen(true);
   };
 
+  const handlesetisModalOpenUpload = () => {
+    console.log("intel inside");
+    setisModalOpenUpload(true);
+  };
+
   console.log("Selected ID:", selectedId);
 
 
   return (
     <div>
       <Base>
+      <button
+  ml="1600px"
+  p="5px 10px"
+  fontSize="14px"
+  colorScheme="blue"
+  onClick={() => {
+    console.log("yo");
+    handlesetisModalOpenUpload();
+    // openModalWithId();
+  }}
+>
+  Upload Documents
+</button>
+
         <Accordion defaultIndex={[0]} allowMultiple>
           <AccordionItem>
             <h2>
@@ -2414,6 +2442,7 @@ function ViewStudentsDetails() {
           </AccordionItem>
         </Accordion>
         <Edit_Prsnl_Info_Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} id={selectedId} />
+        <Upload_Document_Modal isOpen={isModalOpenUpload} onClose={() => setisModalOpenUpload(false)}  />
 
       </Base>
     </div>
@@ -2421,3 +2450,4 @@ function ViewStudentsDetails() {
 }
 
 export default ViewStudentsDetails;
+

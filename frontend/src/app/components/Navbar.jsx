@@ -536,6 +536,8 @@ const AdminMenu = [
   { name: "SC Tracker", icon: MdGroup, path: "/dashboard/admin/sctracker" },
   { name: "Payments", icon: MdGroup, path: "/dashboard/admin/payments" },
   { name: "Tranch Tracker", icon: MdGroup, path: "/dashboard/admin/ttcollege" },
+  { name: "Doc Upload", icon: MdGroup, path: "/dashboard/admin/Doc_Upload" },
+
 ];
 
 const CollegeMenu = [
