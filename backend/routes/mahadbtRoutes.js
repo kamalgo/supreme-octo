@@ -1,6 +1,6 @@
 const express = require("express");
 
-const{UPTE, UPTA, createProfileBot, fetchBlankRecordsByAadhaar, editStudent} = require("../controllers/updateMahadbt_Profiles")
+const{UPTE, UPTA, createProfileBot, fetchBlankRecordsByAadhaar, editStudent, fetchstud} = require("../controllers/updateMahadbt_Profiles")
 
 const {
   getAllMahadbtProfiles,
@@ -182,6 +182,7 @@ router.put("/UPTA", isSignedIn, UPTA); // UPTA update profile through email
 router.post("/createProfileBot", createProfileBot); //creates a new profile record
 router.get("/fetchBlankRecordsByAadhaar",isSignedIn, fetchBlankRecordsByAadhaar);
 router.put("/editStudent", editStudent);
+router.get("/fetchstud",fetchstud)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ROutes for uploading Documents

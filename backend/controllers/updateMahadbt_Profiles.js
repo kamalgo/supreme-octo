@@ -291,3 +291,46 @@ exports.editStudent = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+////////////////////////////////////////////////////////////////////
+
+
+//fetchstud update profile through aadhar
+
+// exports.fetchstud = async (req, res) => {
+//   Mahadbtprofiles.findAll()
+//     .then((result) => {
+//       console.log("result", result);
+//         // The result is an array where the first element is the number of updated rows
+//       return res.status(200).json({
+//         success: true,
+//         message: `${result[0]} row(s) updated`,
+//         data : result
+//       });
+//     })
+//     .catch((error) => {
+//       console.error("Error updating records:", error);
+//       res.status(500).json({ error: "Internal Server Error" });
+//     });
+// };
+
+  exports.fetchstud = (req, res) => {
+    Mahadbtprofiles
+    .findAll({})
+    .then((data) => {
+        console.log('Data retrieved:', data);
+        res.json({
+            success: true,
+            data,
+        });
+    })
+    .catch((error) => {
+        res.status(500).json({
+            success: false,
+            message: "Failed to retrieve data from forstu_tranches",
+            error: error.message || "An error occurred",
+        });
+    });
+};
+
+

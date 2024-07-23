@@ -773,3 +773,6 @@ const mahadbtProfilesBot = sequelize.define("mahadbt_profiles", {
   });
 
   module.exports = mahadbtProfilesBot;
+
+
+  

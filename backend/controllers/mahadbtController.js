@@ -1049,7 +1049,7 @@ exports.sendCasteDocumentToS3 = async (req, res) => {
 
     const listParams = {
       Bucket: "mahadbtdocs",
-      Prefix: `${req.body.id}/castedocument/`,
+      Prefix: `${req.body.id}/castedoc/`,
     };
 
     // List all objects in the folder
