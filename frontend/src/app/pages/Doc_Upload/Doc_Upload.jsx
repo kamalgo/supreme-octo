@@ -2,7 +2,22 @@ import React, { useEffect, useState } from "react";
 import { Table, Input, Button, Modal, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import Base from "../../components/Base";
-import { fetchstud, castecertS3, sendFeeReceiptToS3, sendHostelCertificateToS3, sendAlpabudharakCertificateToS3, sendLabourCertificateToS3 } from "../../api/Doc_Upload/Doc_UploadApi";
+import {
+  fetchstud,
+  castecertS3,
+  sendFeeReceiptToS3,
+  sendHostelCertificateToS3,
+  sendAlpabudharakCertificateToS3,
+  sendLabourCertificateToS3,
+  sendFamilyMemberBeneficiaryCertificateToS3,
+  sendStudentPanCardToS3,
+  sendFatherPanCardToS3,
+  sendFatherAadhaarCardToS3,
+  sendCasteValidityToS3,
+  sendLeavingCertificateToS3,
+  sendRationCardToS3,
+  sendPreviousYearMarksheetToS3
+} from "../../api/Doc_Upload/Doc_UploadApi";
 
 const { Search } = Input;
 
@@ -70,7 +85,7 @@ function Doc_Upload() {
 
     try {
       let response;
-      if (type === 'incomedocument') {
+      if (type === 'video') {
         response = await castecertS3(formData);
       } else if (type === 'feereceipt') {
         response = await sendFeeReceiptToS3(formData);
@@ -80,6 +95,22 @@ function Doc_Upload() {
         response = await sendAlpabudharakCertificateToS3(formData);
       } else if (type === 'labourcertificate') {
         response = await sendLabourCertificateToS3(formData);
+      } else if (type === 'familymemberbeneficiarycertificate') {
+        response = await sendFamilyMemberBeneficiaryCertificateToS3(formData);
+      } else if (type === 'studentpancard') {
+        response = await sendStudentPanCardToS3(formData);
+      } else if (type === 'fatherpancard') {
+        response = await sendFatherPanCardToS3(formData);
+      } else if (type === 'fatheraadhaarcard') {
+        response = await sendFatherAadhaarCardToS3(formData);
+      } else if (type === 'castevalidity') {
+        response = await sendCasteValidityToS3(formData);
+      } else if (type === 'leavingcertificate') {
+        response = await sendLeavingCertificateToS3(formData);
+      } else if (type === 'rationcard') {
+        response = await sendRationCardToS3(formData);
+      } else if (type === 'previousyearmarksheet') {
+        response = await sendPreviousYearMarksheetToS3(formData);
       }
 
       if (response.success) {
@@ -157,7 +188,7 @@ function Doc_Upload() {
               <div style={{ marginTop: 20 }}>
                 <p><strong>Caste Certificate:</strong></p>
                 <Upload
-                  customRequest={(options) => handleUpload(options, 'incomedocument')}  // Use type 'incomedocument'
+                  customRequest={(options) => handleUpload(options, 'video')}  // Use type 'castedocument'
                   showUploadList={false}
                 >
                   <Button icon={<UploadOutlined />}>Upload Caste Certificate</Button>
@@ -197,6 +228,78 @@ function Doc_Upload() {
                   showUploadList={false}
                 >
                   <Button icon={<UploadOutlined />}>Upload Registered Labour Certificate</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Family Member Beneficiary Undertaking Certificate:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'familymemberbeneficiarycertificate')}  // Use type 'familymemberbeneficiarycertificate'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Family Member Beneficiary Undertaking Certificate</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Student PAN Card:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'studentpancard')}  // Use type 'studentpancard'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Student PAN Card</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Father's PAN Card:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'fatherpancard')}  // Use type 'fatherpancard'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Father's PAN Card</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Father's Aadhaar Card:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'fatheraadhaarcard')}  // Use type 'fatheraadhaarcard'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Father's Aadhaar Card</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Caste Validity Certificate:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'castevalidity')}  // Use type 'castevalidity'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Caste Validity Certificate</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Leaving Certificate:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'leavingcertificate')}  // Use type 'leavingcertificate'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Leaving Certificate</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Ration Card:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'rationcard')}  // Use type 'rationcard'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Ration Card</Button>
+                </Upload>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <p><strong>Previous Year Marksheet:</strong></p>
+                <Upload
+                  customRequest={(options) => handleUpload(options, 'previousyearmarksheet')}  // Use type 'previousyearmarksheet'
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Previous Year Marksheet</Button>
                 </Upload>
               </div>
             </div>

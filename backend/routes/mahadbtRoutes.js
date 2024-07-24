@@ -56,7 +56,9 @@ const {
   sendHostelDocumentToS3,
   getPendingStudentsView,
   getSubmittedStudentsView,
-  sendFeeReceiptToS3,sendHostelCertificateToS3, sendAlpabudharakCertificateToS3, sendLabourCertificateToS3 
+  sendFeeReceiptToS3,sendHostelCertificateToS3, sendAlpabudharakCertificateToS3, sendLabourCertificateToS3, sendFamilyMemberBeneficiaryCertificateToS3,
+  sendStudentPanCardToS3, sendFatherPanCardToS3,sendFatherAadhaarCardToS3, sendCasteValidityToS3, sendLeavingCertificateToS3,
+  sendRationCardToS3, sendPreviousYearMarksheetToS3
 } = require("../controllers/mahadbtController");
 
 
@@ -187,7 +189,8 @@ router.get("/fetchstud",fetchstud)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ROutes for uploading Documents
-router.put("/submitcastedocument", sendCasteDocumentToS3);
+// router.put("/submitcastedocument", sendCasteDocumentToS3);
+router.put("/sendCasteDocumentToS3", sendCasteDocumentToS3);
 router.put("/submitincomedocument", sendIncomeDocumentToS3);
 router.put("/submitdomaciledocument", sendDomacileDocumentToS3);
 router.put("/submitdisabilitydocument", sendDisabilityDocumentToS3);
@@ -204,7 +207,17 @@ router.put("/submithosteldocument", sendHostelDocumentToS3);
 router.put("/sendFeeReceiptToS3", sendFeeReceiptToS3);
 router.put("/sendHostelCertificateToS3", sendHostelCertificateToS3);
 router.put("/sendAlpabudharakCertificateToS3",sendAlpabudharakCertificateToS3);
-router.put("/sendLabourCertificateToS3", sendLabourCertificateToS3 )
+router.put("/sendLabourCertificateToS3", sendLabourCertificateToS3 );
+router.put("/sendFamilyMemberBeneficiaryCertificateToS3",sendFamilyMemberBeneficiaryCertificateToS3);
+router.put("/sendStudentPanCardToS3", sendStudentPanCardToS3);
+router.put("/sendFatherPanCardToS3", sendFatherPanCardToS3);
+router.put("/sendFatherAadhaarCardToS3", sendFatherAadhaarCardToS3);
+router.put("/sendCasteValidityToS3", sendCasteValidityToS3);
+// router.put("sendLeavingCertificateToS3", sendLeavingCertificateToS3)
+router.put("/sendLeavingCertificateToS3",sendLeavingCertificateToS3);
+router.put("/sendRationCardToS3", sendRationCardToS3);
+router.put("/sendPreviousYearMarksheetToS3", sendPreviousYearMarksheetToS3);
+
 // router.put("/submi", sendIncomeDocumentToS3);
 
 router.post("/getPersonalInfo", personalInfo);
