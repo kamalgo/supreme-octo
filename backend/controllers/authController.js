@@ -322,6 +322,20 @@ exports.isCollege = (req, res, next) => {
   }
 };
 
+////////////////////////////////////////////////////
+exports.isCoworker = (req, res, next) => {
+  const { role } = req.profile;
+  if (role === ROLES.COWORKER) {
+    next();
+  } else {
+    return res.status(403).json({
+      status: false,
+      message: "Forbidden!",
+    });
+  }
+};
+/////////////////////////////////////////////////////
+
 
 // exports.changePassword = (req, res) => {
 //   try {

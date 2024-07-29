@@ -537,6 +537,8 @@ const AdminMenu = [
   { name: "Payments", icon: MdGroup, path: "/dashboard/admin/payments" },
   { name: "Tranch Tracker", icon: MdGroup, path: "/dashboard/admin/ttcollege" },
   { name: "Doc Upload", icon: MdGroup, path: "/dashboard/admin/Doc_Upload" },
+  { name: "Fresh Students", icon: MdGroup, path: "/dashboard/admin/FreshStudents" },
+  { name: "Renewal Students", icon: MdGroup, path: "/dashboard/admin/RenewalStudents" },
 
 ];
 
@@ -545,6 +547,14 @@ const CollegeMenu = [
   { name: "Tranch Tracker College", icon: FiEye , path: "/dashboard/college/stc" },
 
 ];
+
+const CoWorkerMenu = [
+  { name: "Dashboard", icon: MdDashboard, path: "/dashboard/coworker" },
+  { name: "Student ProfileView", icon: FiEye, path:"/coworker/StudentProfileView"},
+  { name: "Doc Upload", icon: MdGroup, path: "/coworker/Doc_Upload" },
+];
+
+
 
 function Navbar({ children, history }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -590,6 +600,8 @@ const SidebarContent = ({ onClose, valuehistory }) => {
         return AdminMenu;
       case ROLES.COLLEGE:
         return CollegeMenu;
+      case ROLES.COWORKER:
+        return CoWorkerMenu;
       default:
         return [];
     }

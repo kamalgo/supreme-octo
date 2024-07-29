@@ -1,6 +1,8 @@
 const express = require("express");
 
-const{UPTE, UPTA, createProfileBot, fetchBlankRecordsByAadhaar, editStudent, fetchstud} = require("../controllers/updateMahadbt_Profiles")
+const{UPTE, UPTA, createProfileBot, fetchBlankRecordsByAadhaar, editStudent, fetchstud, getallFresh
+      ,getallRenewal
+      } = require("../controllers/updateMahadbt_Profiles")
 
 const {
   getAllMahadbtProfiles,
@@ -242,6 +244,10 @@ router.post(
   // isSignedIn,
   getSingleMahadbtProfileByRefCode
 );
+
+router.get("/getallFresh", getallFresh);
+router.get("/getallRenewal",getallRenewal);
+
 
 // send mail bulk mail to students
 

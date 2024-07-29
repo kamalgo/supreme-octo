@@ -27,6 +27,11 @@ import Payments from "./pages/Payments/Payments";
 import CDashboard from "./pages/CDashboard/CDashboard";
 import Stc from "./pages/STC/Stc";
 import Doc_Upload from "./pages/Doc_Upload/Doc_Upload";
+import FreshStudents from "./pages/Fresh_Students/FreshStudents";
+import RenewalStudents from "./pages/Renewal_Students/RenewalStudents";
+import CoWorkerDash from "./pages/CoWorkerDash/CoWorkerDash";
+import { StudentProfileView } from "./pages/Student_ProfileView/StudentProfileView";
+
 
 function App() {
   return (
@@ -159,6 +164,47 @@ function App() {
           component={Doc_Upload}
           role={ROLES.ADMIN}
         />
+        
+        <ProtectedRoute
+          exact
+          path="/dashboard/admin/FreshStudents"
+          component={FreshStudents}
+          role={ROLES.ADMIN}
+        />
+        
+        <ProtectedRoute
+          exact
+          path="/dashboard/admin/RenewalStudents"
+          component={RenewalStudents}
+          role={ROLES.ADMIN}
+        />
+
+
+
+        <ProtectedRoute
+          exact
+          path="/dashboard/coworker"
+          component={CoWorkerDash}
+          role={ROLES.COWORKER}
+        />
+
+StudentProfileView
+        <ProtectedRoute
+          exact
+          path="/coworker/StudentProfileView"
+          component={StudentProfileView}
+          role={ROLES.COWORKER}
+        />
+
+                
+        <ProtectedRoute
+          exact
+          path="/coworker/Doc_Upload"
+          component={Doc_Upload}
+          role={ROLES.COWORKER}
+        />
+
+
 
         {/* 404 route */}
         {/* <Route path="*">

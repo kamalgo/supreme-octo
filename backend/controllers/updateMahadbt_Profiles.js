@@ -5,6 +5,7 @@
 const { Sequelize, Op } = require("sequelize");
 const Mahadbtprofiles = require("../models/mahadbtModel");
 const mahadbtProfilesBot = require("../models/mahadbtModel_Bot")
+const MahadbtRenewal = require ("../models/mahadbtRenewalModel")
 
 
 //UPTE update profile through email
@@ -334,3 +335,39 @@ exports.editStudent = async (req, res) => {
 };
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+exports.getallFresh = async (req, res) => {
+
+  try{
+        const freshprofiles = await mahadbtProfilesBot.findAll();
+        return res.status(200).json(
+           {
+            sucess: true,
+            data : freshprofiles
+           }
+          );
+
+  }catch (error) {
+    console.error("Error fetching profiles :" , error);
+    res.status(500).json({error: "internal server Error"})
+
+  }
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+exports.getallRenewal = async (req, res) => {
+  try{
+        const renewalprofiles = await MahadbtRenewal.findAll();
+        return res.status(200).json(
+          {
+            sucess: true,
+            data : renewalprofiles
+          }
+        );
+  }catch (error){
+    console.error("Error fetching profiles :", error);
+    res.status(500).json({error:"internal server Error"})
+
+  }
+}
