@@ -204,6 +204,12 @@ StudentProfileView
           role={ROLES.COWORKER}
         />
 
+        <ProtectedRoute
+          exact
+          path="/coworker/FreshStudents"
+          component={FreshStudents}
+          role={ROLES.COWORKER}
+        />
 
 
         {/* 404 route */}

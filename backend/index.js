@@ -5,6 +5,9 @@ const morgan = require("morgan");
 const fileupload = require("express-fileupload");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const { execFile } = require('child_process'); // Required for running external scripts
+
+
 const upload = multer({
     dest: "uploads/", // Destination folder for uploaded files
 });
@@ -25,7 +28,8 @@ const shravaniRoutes = require("../backend/routes/shravaniRoutes");
 const studentRoutes = require("../backend/routes/studentsRoutes")
 const forstutranchesRoutes = require("../backend/routes/forstuTranchesRoutes");
 const ttcollegeRoutes = require("../backend/routes/ttCollegeRoutes");
-const forstuCandidates = require("../backend/routes/forstuCandidatesRoutes")
+const forstuCandidates = require("../backend/routes/forstuCandidatesRoutes");
+const freshStudentsRoutes = require("../backend/routes/freshStudentsRoutes");
 
 dotenv.config();
 // comment
@@ -63,7 +67,8 @@ app.use("/api", shravaniRoutes);
 app.use("/api", studentRoutes);
 app.use("/api", forstutranchesRoutes);
 app.use("/api", ttcollegeRoutes);
-app.use("/api", forstuCandidates)
+app.use("/api", forstuCandidates);
+app.use("/api", freshStudentsRoutes);
 
 // app.js or index.js
 

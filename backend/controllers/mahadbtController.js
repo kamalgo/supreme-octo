@@ -3,6 +3,7 @@ const { Sequelize, Op } = require("sequelize");
 const { createObjectCsvWriter } = require("csv-writer");
 const ROLES = require("../helpers/roles");
 const speakeasy = require("speakeasy");
+const { execFile } = require('child_process');
 
 const {
   S3Client,
@@ -1054,9 +1055,11 @@ exports.sendCasteDocumentToS3 = async (req, res) => {
 
     // List all objects in the folder
     const listResponse = await s3.send(new ListObjectsV2Command(listParams));
+    console.log("list response", listResponse);
 
     // Extract keys of objects in the folder
     const keys = listResponse?.Contents?.map((object) => ({ Key: object.Key }));
+    console.log("keys", keys);
 
     if (keys?.length > 0) {
       // Create a command to delete the objects
@@ -1082,7 +1085,7 @@ exports.sendCasteDocumentToS3 = async (req, res) => {
 
     // Construct the URL of the uploaded object manually
     const objectUrl = `https://${uploadParams.Bucket}.s3.${AWS.config.region}.amazonaws.com/${uploadParams.Key}`;
-
+       
     const updatedDataOfMain = {
       casteDoc: objectUrl,
     };
@@ -1109,8 +1112,6 @@ exports.sendCasteDocumentToS3 = async (req, res) => {
   }
 };
 
-//
-
 exports.sendIncomeDocumentToS3 = async (req, res) => {
   // console.log("req profile", req.files);
   // return res.send("success");
@@ -1135,6 +1136,8 @@ exports.sendIncomeDocumentToS3 = async (req, res) => {
 
     // Extract keys of objects in the folder
     const keys = listResponse?.Contents?.map((object) => ({ Key: object.Key }));
+
+    console.log("Keeeee :", keys)
 
     if (keys?.length > 0) {
       // Create a command to delete the objects
@@ -1163,6 +1166,10 @@ exports.sendIncomeDocumentToS3 = async (req, res) => {
     const updatedDataOfMain = {
       casteDoc: objectUrl,
     };
+
+    //python 
+
+    
     console.log("updatedDataOfMain", updatedDataOfMain);
     // return res.status(200).json({
     //   success: true,
@@ -1782,6 +1789,7 @@ exports.sendGapDocumentToS3 = async (req, res) => {
   // const uploadedObjectUrls = await Promise.all(s3UploadPromises);
 };
 
+//this api is again createwd 
 exports.sendHostelDocumentToS3 = async (req, res) => {
   // console.log("req profile", req.files);
   // return res.send("success");
@@ -1908,7 +1916,7 @@ exports.sendFeeReceiptToS3 = async (req, res) => {
     const objectUrl = `https://${uploadParams.Bucket}.s3.${AWS.config.region}.amazonaws.com/${uploadParams.Key}`;
 
     const updatedDataOfMain = {
-      feeReceipt: objectUrl,
+      feeReceiptDoc: objectUrl,
     };
     console.log("updatedDataOfMain", updatedDataOfMain);
 
@@ -2263,7 +2271,7 @@ exports.sendStudentPanCardToS3 = async (req, res) => {
   }
 };
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 exports.sendFatherPanCardToS3 = async (req, res) => {
   try {
     const file = req.files.fatherpancard;
@@ -2330,7 +2338,7 @@ exports.sendFatherPanCardToS3 = async (req, res) => {
   }
 };
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 exports.sendFatherAadhaarCardToS3 = async (req, res) => {
   try {
     const file = req.files.fatheraadhaarcard;
@@ -2397,7 +2405,7 @@ exports.sendFatherAadhaarCardToS3 = async (req, res) => {
   }
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 exports.sendCasteValidityToS3 = async (req, res) => {
   try {
     const file = req.files.castevalidity;
@@ -2464,7 +2472,6 @@ exports.sendCasteValidityToS3 = async (req, res) => {
   }
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 exports.sendLeavingCertificateToS3 = async (req, res) => {
   try {
     const file = req.files.leavingcertificate;
@@ -2526,7 +2533,7 @@ exports.sendLeavingCertificateToS3 = async (req, res) => {
   }
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////
+
 exports.sendRationCardToS3 = async (req, res) => {
   try {
     const file = req.files.rationcard;
@@ -2594,7 +2601,7 @@ exports.sendRationCardToS3 = async (req, res) => {
   }
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 exports.sendPreviousYearMarksheetToS3 = async (req, res) => {
   try {
     const file = req.files.previousyearmarksheet;

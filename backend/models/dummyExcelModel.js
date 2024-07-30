@@ -759,6 +759,12 @@ const dummyModel = sequelize.define("dummy_profiles", {
     type: Sequelize.DataTypes.STRING,
     allowNull: true,
   },
+  aadhaar_number: {
+    type: Sequelize.DataTypes.STRING(12),
+    allowNull: true,
+    field: 'aadhaar_number',
+  },
+
 });
 
 module.exports = dummyModel;

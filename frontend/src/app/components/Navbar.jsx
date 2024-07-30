@@ -552,6 +552,8 @@ const CoWorkerMenu = [
   { name: "Dashboard", icon: MdDashboard, path: "/dashboard/coworker" },
   { name: "Student ProfileView", icon: FiEye, path:"/coworker/StudentProfileView"},
   { name: "Doc Upload", icon: MdGroup, path: "/coworker/Doc_Upload" },
+  { name: "Fresh Students", icon: FiEye, path: "/coworker/FreshStudents" },
+
 ];
 
 
