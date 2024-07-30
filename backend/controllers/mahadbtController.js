@@ -1,48 +1,48 @@
-// const { Op } = require("sequelize");
-const { Sequelize, Op } = require("sequelize");
-const { createObjectCsvWriter } = require("csv-writer");
-const ROLES = require("../helpers/roles");
-const speakeasy = require("speakeasy");
-const { execFile } = require('child_process');
+  // const { Op } = require("sequelize");
+  const { Sequelize, Op } = require("sequelize");
+  const { createObjectCsvWriter } = require("csv-writer");
+  const ROLES = require("../helpers/roles");
+  const speakeasy = require("speakeasy");
+  const { execFile } = require('child_process');
 
-const {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-  ListObjectsV2Command,
-  DeleteObjectCommand,
-  DeleteObjectsCommand,
-} = require("@aws-sdk/client-s3");
-// const User = require("../models/usersModel");
-const collegeprofile = require("../models/collegeModel");
-const Mahadbtprofiles = require("../models/mahadbtModel");
+  const {
+    S3Client,
+    PutObjectCommand,
+    GetObjectCommand,
+    ListObjectsV2Command,
+    DeleteObjectCommand,
+    DeleteObjectsCommand,
+  } = require("@aws-sdk/client-s3");
+  // const User = require("../models/usersModel");
+  const collegeprofile = require("../models/collegeModel");
+  const Mahadbtprofiles = require("../models/mahadbtModel");
 
-const { validationResult } = require("express-validator");
-const { createHmac } = require("crypto");
+  const { validationResult } = require("express-validator");
+  const { createHmac } = require("crypto");
 
-const dotenv = require("dotenv");
-const sequelize = require("../database/connection");
-const AWS = require("aws-sdk");
-const ExcelInfo = require("../models/testExcelModel");
-const User = require("../models/usersModel");
-const nodemailer = require("nodemailer");
+  const dotenv = require("dotenv");
+  const sequelize = require("../database/connection");
+  const AWS = require("aws-sdk");
+  const ExcelInfo = require("../models/testExcelModel");
+  const User = require("../models/usersModel");
+  const nodemailer = require("nodemailer");
 
-// const { Json } = require("sequelize/types/utils");
-dotenv.config();
+  // const { Json } = require("sequelize/types/utils");
+  dotenv.config();
 
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_BUCKET_REGION, // For example, 'us-east-1'
-});
-
-const s3 = new S3Client({
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY, // store it in .env file to keep it safe
+  AWS.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-  region: process.env.AWS_BUCKET_REGION, // this is the region that you select in AWS account
-});
+    region: process.env.AWS_BUCKET_REGION, // For example, 'us-east-1'
+  });
+
+  const s3 = new S3Client({
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY, // store it in .env file to keep it safe
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+    region: process.env.AWS_BUCKET_REGION, // this is the region that you select in AWS account
+  });
 
 // Function to generate a TOTP secret
 const generateTOTPSecret = () => {
