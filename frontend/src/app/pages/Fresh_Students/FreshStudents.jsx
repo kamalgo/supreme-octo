@@ -1,84 +1,9 @@
-// import { Heading, Flex } from "@chakra-ui/react";
-// import React, { useState, useEffect } from "react";
-// import { Table, Input } from "antd";
-// import Base from "../../components/Base";
-// import { FreshStudentApi, castecertS3Fresh } from "../../api/FreshStudentAPi/FreshStudentApi";
 
-// const { Search } = Input;
-
-// const FreshStudents = () => {
-//   const [data, setData] = useState([]);
-//   const [searchText, setSearchText] = useState("");
-
-//   const fetchData = async (query = "") => {
-//     try {
-//       const response = await FreshStudentApi(query);
-//       setData(response.data); // Adjust according to your API response structure
-//     } catch (error) {
-//       console.error("Error fetching data:", error);
-//     }
-//   };
-
-//   // Fetch data on component mount
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   // Handle search
-//   const handleSearch = (value) => {
-//     setSearchText(value);
-//     fetchData(value);
-//   };
-
-//   // Columns for the Ant Design table
-//   const columns = [
-//     {
-//       title: "Name",
-//       dataIndex: "candidateName",
-//       key: "candidateName",
-//     },
-//     {
-//       title: "Gender",
-//       dataIndex: "gender",
-//       key: "gender",
-//     },
-//     // Add other columns as needed
-//   ]; 
-
-//   return (
-//     <Base>
-//       <Flex justifyContent="center" alignItems="center">
-//         <Heading as="h1" size="xl">
-//           Fresh Students
-//         </Heading>
-//       </Flex>
-
-//       <div style={{ padding: "20px" }}>
-//         <Search
-//           placeholder="Search students"
-//           onSearch={handleSearch}
-//           style={{ marginBottom: "20px" }}
-//           enterButton
-//         />
-//         <Table
-//           dataSource={data}
-//           columns={columns}
-//           rowKey="id" // Ensure each row has a unique 'id'
-//         />
-//       </div>
-//     </Base>
-//   );
-// };
-
-// export default FreshStudents;
-
-// //This code uploads data to s3
-// import { Heading, Flex } from "@chakra-ui/react";
 // import React, { useState, useEffect } from "react";
 // import { Table, Input, Button, Modal, Upload, message } from "antd";
 // import { UploadOutlined } from "@ant-design/icons";
 // import Base from "../../components/Base";
-// import { FreshStudentApi, castecertS3Fresh } from "../../api/FreshStudentAPi/FreshStudentApi";
+// import { FreshStudentApi, castecertS3Fresh, fetchRecordDetails } from "../../api/FreshStudentApi/FreshStudentApi.js";
 
 // const { Search } = Input;
 
@@ -87,6 +12,7 @@
 //   const [searchText, setSearchText] = useState("");
 //   const [selectedRecord, setSelectedRecord] = useState(null);
 //   const [isModalVisible, setIsModalVisible] = useState(false);
+//   const [recordDetails, setRecordDetails] = useState(null);
 
 //   const fetchData = async (query = "") => {
 //     try {
@@ -106,19 +32,27 @@
 //     fetchData(value);
 //   };
 
-//   const handleUploadDocuments = (record) => {
+//   const handleUploadDocuments = async (record) => {
 //     setSelectedRecord(record);
-//     setIsModalVisible(true);
+//     try {
+//       const response = await fetchRecordDetails(record.id); // Fetch record details from the database
+//       setRecordDetails(response.data); // Adjust according to your API response structure
+//       setIsModalVisible(true);
+//     } catch (error) {
+//       console.error("Error fetching record details:", error);
+//     }
 //   };
 
 //   const handleModalOk = () => {
 //     setIsModalVisible(false);
 //     setSelectedRecord(null);
+//     setRecordDetails(null);
 //   };
 
 //   const handleModalCancel = () => {
 //     setIsModalVisible(false);
 //     setSelectedRecord(null);
+//     setRecordDetails(null);
 //   };
 
 //   const handleUpload = async ({ file, onSuccess, onError }) => {
@@ -133,6 +67,7 @@
 //         onSuccess();
 //         setIsModalVisible(false);
 //         setSelectedRecord(null);
+//         setRecordDetails(null);
 //       } else {
 //         message.error("Upload failed. Please try again.");
 //         onError(new Error("Upload failed"));
@@ -166,12 +101,6 @@
 
 //   return (
 //     <Base>
-//       <Flex justifyContent="center" alignItems="center">
-//         <Heading as="h1" size="xl">
-//           Fresh Students
-//         </Heading>
-//       </Flex>
-
 //       <div style={{ padding: "20px" }}>
 //         <Search
 //           placeholder="Search students"
@@ -195,7 +124,7 @@
 //             </Button>
 //           ]}
 //         >
-//           {selectedRecord && (
+//           {selectedRecord && recordDetails ? (
 //             <div>
 //               <p><strong>ID:</strong> {selectedRecord.id}</p>
 //               <p><strong>Name:</strong> {selectedRecord.candidateName}</p>
@@ -206,8 +135,19 @@
 //                 >
 //                   <Button icon={<UploadOutlined />}>Upload Caste Certificate</Button>
 //                 </Upload>
+//                 {recordDetails.casteDoc && (
+//                   <Button
+//                     style={{ marginLeft: 10 }}
+//                     onClick={() => window.open(recordDetails.casteDoc, "_blank")}
+//                   >
+//                     View Caste Certificate
+//                   </Button>
+//                 )}
 //               </div>
+//               {/* Add more sections for other document types as needed */}
 //             </div>
+//           ) : (
+//             <p>No details available</p>
 //           )}
 //         </Modal>
 //       </div>
@@ -218,11 +158,13 @@
 // export default FreshStudents;
 
 
+
 import React, { useState, useEffect } from "react";
 import { Table, Input, Button, Modal, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import Base from "../../components/Base";
-import { FreshStudentApi, castecertS3Fresh, fetchRecordDetails } from "../../api/FreshStudentApi/FreshStudentApi.js";
+import { FreshStudentApi, castecertS3Fresh, fetchRecordDetails, incomeDocS3Fresh, feeReceiptS3Fresh, hostelCertS3Fresh } 
+from "../../api/FreshStudentApi/FreshStudentApi.js";
 
 const { Search } = Input;
 
@@ -274,13 +216,24 @@ const FreshStudents = () => {
     setRecordDetails(null);
   };
 
-  const handleUpload = async ({ file, onSuccess, onError }) => {
+  const handleUpload = async ({ file, onSuccess, onError }, documentType) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('id', selectedRecord.id);
 
     try {
-      const response = await castecertS3Fresh(formData);
+      let uploadFunction;
+      if (documentType === "caste") {
+        uploadFunction = castecertS3Fresh;
+      } else if (documentType === "income") {
+        uploadFunction = incomeDocS3Fresh;
+      } else if (documentType === "fee") {
+        uploadFunction = feeReceiptS3Fresh;
+      } else if (documentType === "hostel") {
+        uploadFunction = hostelCertS3Fresh;
+      }
+
+      const response = await uploadFunction(formData);
       if (response.success) {
         message.success(`${file.name} file uploaded successfully.`);
         onSuccess();
@@ -349,7 +302,7 @@ const FreshStudents = () => {
               <p><strong>Name:</strong> {selectedRecord.candidateName}</p>
               <div style={{ marginTop: 20 }}>
                 <Upload
-                  customRequest={(options) => handleUpload(options)}
+                  customRequest={(options) => handleUpload(options, "caste")}
                   showUploadList={false}
                 >
                   <Button icon={<UploadOutlined />}>Upload Caste Certificate</Button>
@@ -360,6 +313,54 @@ const FreshStudents = () => {
                     onClick={() => window.open(recordDetails.casteDoc, "_blank")}
                   >
                     View Caste Certificate
+                  </Button>
+                )}
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "income")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Income Document</Button>
+                </Upload>
+                {recordDetails.incomeDoc && (
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    onClick={() => window.open(recordDetails.incomeDoc, "_blank")}
+                  >
+                    View Income Document
+                  </Button>
+                )}
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "fee")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Fee Receipt</Button>
+                </Upload>
+                {recordDetails.feeReceiptDoc && (
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    onClick={() => window.open(recordDetails.feeReceiptDoc, "_blank")}
+                  >
+                    View Fee Receipt
+                  </Button>
+                )}
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "hostel")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Hostel Certificate</Button>
+                </Upload>
+                {recordDetails.hostelDoc && (
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    onClick={() => window.open(recordDetails.hostelDoc, "_blank")}
+                  >
+                    View Hostel Certificate
                   </Button>
                 )}
               </div>
