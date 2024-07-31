@@ -163,8 +163,9 @@ import React, { useState, useEffect } from "react";
 import { Table, Input, Button, Modal, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import Base from "../../components/Base";
-import { FreshStudentApi, castecertS3Fresh, fetchRecordDetails, incomeDocS3Fresh, feeReceiptS3Fresh, hostelCertS3Fresh } 
-from "../../api/FreshStudentApi/FreshStudentApi.js";
+import { FreshStudentApi, castecertS3Fresh, fetchRecordDetails, incomeDocS3Fresh, feeReceiptS3Fresh, hostelCertS3Fresh, 
+  alpabudharakCertS3Fresh, declarationCertS3Fresh, registeredLabourCertS3Fresh, studentPanCardS3Fresh, fatherPanCardS3Fresh, 
+  fatherAadharCardS3Fresh, casteValidityS3Fresh } from "../../api/FreshStudentApi/FreshStudentApi.js";
 
 const { Search } = Input;
 
@@ -223,14 +224,42 @@ const FreshStudents = () => {
 
     try {
       let uploadFunction;
-      if (documentType === "caste") {
-        uploadFunction = castecertS3Fresh;
-      } else if (documentType === "income") {
-        uploadFunction = incomeDocS3Fresh;
-      } else if (documentType === "fee") {
-        uploadFunction = feeReceiptS3Fresh;
-      } else if (documentType === "hostel") {
-        uploadFunction = hostelCertS3Fresh;
+      switch (documentType) {
+        case "caste":
+          uploadFunction = castecertS3Fresh;
+          break;
+        case "income":
+          uploadFunction = incomeDocS3Fresh;
+          break;
+        case "fee":
+          uploadFunction = feeReceiptS3Fresh;
+          break;
+        case "hostel":
+          uploadFunction = hostelCertS3Fresh;
+          break;
+        case "alpabudharak":
+          uploadFunction = alpabudharakCertS3Fresh;
+          break;
+        case "declaration":
+          uploadFunction = declarationCertS3Fresh;
+          break;
+        case "registeredLabour":
+          uploadFunction = registeredLabourCertS3Fresh;
+          break;
+        case "studentPanCard":
+          uploadFunction = studentPanCardS3Fresh;
+          break;
+        case "fatherPanCard":
+          uploadFunction = fatherPanCardS3Fresh;
+          break;
+        case "fatherAadharCard":
+          uploadFunction = fatherAadharCardS3Fresh;
+          break;
+        case "casteValidity":
+          uploadFunction = casteValidityS3Fresh;
+          break;
+        default:
+          throw new Error("Unknown document type");
       }
 
       const response = await uploadFunction(formData);
@@ -364,7 +393,118 @@ const FreshStudents = () => {
                   </Button>
                 )}
               </div>
-              {/* Add more sections for other document types as needed */}
+              <div style={{ marginTop: 20 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "alpabudharak")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Alpabudharak Certificate</Button>
+                </Upload>
+                {recordDetails.alpabhudharakDoc && (
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    onClick={() => window.open(recordDetails.alpabhudharakDoc, "_blank")}
+                  >
+                    View Alpabudharak Certificate
+                  </Button>
+                )}
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "declaration")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Declaration Certificate</Button>
+                </Upload>
+                {recordDetails.declarationCertificateDoc && (
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    onClick={() => window.open(recordDetails.declarationCertificateDoc, "_blank")}
+                  >
+                    View Declaration Certificate
+                  </Button>
+                )}
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "registeredLabour")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Registered Labour Certificate</Button>
+                </Upload>
+                {recordDetails.labourDoc && (
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    onClick={() => window.open(recordDetails.labourDoc, "_blank")}
+                  >
+                    View Registered Labour Certificate
+                  </Button>
+                )}
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "studentPanCard")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Student PAN Card</Button>
+                </Upload>
+                {recordDetails.studentPanCard && (
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    onClick={() => window.open(recordDetails.studentPanCard, "_blank")}
+                  >
+                    View Student PAN Card
+                  </Button>
+                )}
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "fatherPanCard")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Father PAN Card</Button>
+                </Upload>
+                {recordDetails.fatherPanCard && (
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    onClick={() => window.open(recordDetails.fatherPanCard, "_blank")}
+                  >
+                    View Father PAN Card
+                  </Button>
+                )}
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "fatherAadharCard")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Father Aadhar Card</Button>
+                </Upload>
+                {recordDetails.fatherAadhaarCard && (
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    onClick={() => window.open(recordDetails.fatherAadhaarCard, "_blank")}
+                  >
+                    View Father Aadhar Card
+                  </Button>
+                )}
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "casteValidity")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Caste Validity Certificate</Button>
+                </Upload>
+                {recordDetails.casteValidityDoc && (
+                  <Button
+                    style={{ marginLeft: 10 }}
+                    onClick={() => window.open(recordDetails.casteValidityDoc, "_blank")}
+                  >
+                    View Caste Validity Certificate
+                  </Button>
+                )}
+              </div>
             </div>
           ) : (
             <p>No details available</p>
@@ -376,3 +516,9 @@ const FreshStudents = () => {
 };
 
 export default FreshStudents;
+  
+
+
+
+
+

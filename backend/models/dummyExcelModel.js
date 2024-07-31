@@ -764,6 +764,41 @@ const dummyModel = sequelize.define("dummy_profiles", {
     allowNull: true,
     field: 'aadhaar_number',
   },
+  alpabhudharakDoc: {
+    type: Sequelize.DataTypes.STRING(12),
+    allowNull: true,
+    field: 'Alpa_bhu_dharak_Shetkari_Doc',
+  },
+  labourDoc: {
+    type: Sequelize.DataTypes.STRING(12),
+    allowNull: true,
+    field: 'Registered_labour_Doc',
+  }, 
+  declarationCertificateDoc: {
+    type: Sequelize.DataTypes.STRING(12),
+    allowNull: true,
+    field: 'Declaration_Certificate_Doc',
+  },  
+  studentPanCard: {
+    type: Sequelize.DataTypes.STRING(12),
+    allowNull: true,
+    field: 'Student_Pan_Card',
+  },
+  fatherPanCard: {
+    type: Sequelize.DataTypes.STRING(12),
+    allowNull: true,
+    field: 'Father_Pancard_Doc',
+  },
+  fatherAadhaarCard: {
+    type: Sequelize.DataTypes.STRING(12),
+    allowNull: true,
+    field: 'Father_Aadhaar_Doc',
+  },
+  casteValidityDoc: {
+    type: Sequelize.DataTypes.STRING(12),
+    allowNull: true,
+    field: 'Caste_Validity_Doc',
+  },
 
 });
 
