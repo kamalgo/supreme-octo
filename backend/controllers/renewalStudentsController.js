@@ -1,4 +1,3 @@
-const dummyModel = require("../models/dummyExcelModel");
 
   const { Sequelize, Op } = require("sequelize");
   const { createObjectCsvWriter } = require("csv-writer");
@@ -15,7 +14,6 @@ const dummyModel = require("../models/dummyExcelModel");
     DeleteObjectsCommand,
   } = require("@aws-sdk/client-s3");
   // const User = require("../models/usersModel");
-  const collegeprofile = require("../models/collegeModel");
   const Mahadbtprofiles = require("../models/mahadbtModel");
 
   const { validationResult } = require("express-validator");
@@ -46,11 +44,11 @@ const dummyModel = require("../models/dummyExcelModel");
   });
 
 
-exports.getallFreshStudents = async (req, res) => {
+exports.getallRenewalStudents = async (req, res) => {
   const searchQuery = req.query.q || ""; // Get search query from request
 
   try {
-    const freshprofiles = await dummyModel.findAll({
+    const freshprofiles = await Mahadbtprofiles.findAll({
       where: {
         candidateName: {
           [Op.like]: `%${searchQuery}%`,
@@ -67,11 +65,11 @@ exports.getallFreshStudents = async (req, res) => {
   }
 };
 
-exports.getFreshStudentDetails = async (req, res) => {
+exports.getRenewalStudentDetails = async (req, res) => {
   const studentId = req.params.id;
 
   try {
-    const student = await dummyModel.findByPk(studentId);
+    const student = await Mahadbtprofiles.findByPk(studentId);
 
     if (!student) {
       return res.status(404).json({ error: "Student not found" });
@@ -87,7 +85,7 @@ exports.getFreshStudentDetails = async (req, res) => {
   }
 };
 
-exports.sendCasteDocumentToS3Fresh = async (req, res) => {
+exports.sendCasteDocumentToS3Renewal = async (req, res) => {
   // console.log("req blblblbl", req.body.id);
   // console.log("req profile", req);
   // Check if req.emailData exists and has the 'base32' property before accessing it
@@ -160,7 +158,7 @@ exports.sendCasteDocumentToS3Fresh = async (req, res) => {
     //   data: objectUrl,
     // });
     // Update database entry
-    await dummyModel.update(updatedDataOfMain, {
+    await Mahadbtprofiles.update(updatedDataOfMain, {
       where: {
         id: req.body.id,
       },

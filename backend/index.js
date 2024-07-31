@@ -30,6 +30,7 @@ const forstutranchesRoutes = require("../backend/routes/forstuTranchesRoutes");
 const ttcollegeRoutes = require("../backend/routes/ttCollegeRoutes");
 const forstuCandidates = require("../backend/routes/forstuCandidatesRoutes");
 const freshStudentsRoutes = require("../backend/routes/freshStudentsRoutes");
+const renewalStudentsRoutes = require("../backend/routes/renewalStudentsRoutes");
 
 dotenv.config();
 // comment
@@ -69,6 +70,8 @@ app.use("/api", forstutranchesRoutes);
 app.use("/api", ttcollegeRoutes);
 app.use("/api", forstuCandidates);
 app.use("/api", freshStudentsRoutes);
+app.use("/api", renewalStudentsRoutes);
+
 
 // app.js or index.js
 
