@@ -77,13 +77,14 @@
 
 // export default RenewalStudents;
 
-
+import { NavLink } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import { Heading, Flex } from "@chakra-ui/react";
 import { Table, Input, Button, Modal, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import Base from "../../components/Base";
 import { RenewalStudentApi, castecertS3Fresh, fetchRecordDetails } from "../../api/RenewalStudentsApi/RenewalStudentsApi";
+// import reactRouterDom from "react-router-dom";
 
 const { Search } = Input;
 
@@ -114,7 +115,7 @@ const RenewalStudents = () => {
   const handleSearch = (value) => {
     setSearchText(value);
     const filtered = data.filter(
-      (item) => item.candidateName.toLowerCase().includes(value.toLowerCase()) // Adjust the property to search by
+      (item) => item.Mahadbt_Username.toLowerCase().includes(value.toLowerCase()) // Adjust the property to search by
     );
     setFilteredData(filtered);
   };
@@ -169,8 +170,13 @@ const RenewalStudents = () => {
   // Columns for the Ant Design table
   const columns = [
     {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
       title: "Name",
-      dataIndex: "candidateName",
+      dataIndex: "Mahadbt_Username",
       key: "candidateName",
     },
     {
@@ -181,8 +187,13 @@ const RenewalStudents = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (_, record) => (
-        <Button onClick={() => handleUploadDocuments(record)}>Upload Documents</Button>
+      render: (_, record) => (<>
+        <Button onClick={() => handleUploadDocuments(record)}>Upload Documents
+        </Button>
+        <NavLink to={`/coworker/viewFreshStudents/${record.id}`}>
+          <Button>View Fresh Students</Button>
+          </NavLink>
+        </>
       ),
     },
   ];

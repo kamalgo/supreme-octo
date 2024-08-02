@@ -9,50 +9,41 @@ import {
   Flex,
   Heading,
   Spacer,
+  useToast,
 } from "@chakra-ui/react";
 import { Table as AntTable } from "antd";
 import {
   executeScholarShipApplicationApi,
   getEmailsofpendingstudentsApi,
-  getStudentsViewApi,
   getSubmittedStudentsViewApi,
   sendEmailToStudentMicrositeApi,
-  studentprofileviewApi,
 } from "../../api/Student/StudentApis";
-import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
+import { NavLink } from "react-router-dom";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import { useToast } from "@chakra-ui/react";
-import { HiCheckCircle } from "react-icons/hi";
-import { BsThreeDotsVertical } from "react-icons/bs";
-// import StudentDetailsModel from "./StudentComponents/StudentDetailsModel";
 
 function SubmitedStudents() {
   const [getStudent, setStudent] = useState([]);
-  // const [getPendingStudentEmail, setPendingStudentEmail] = useState([]);
   const toast = useToast();
 
-  const onChange = (pagination, filters, sorter, extra) => {};
+  const onChange = (pagination, filters, sorter, extra) => {
+    // Handle table change events (pagination, filtering, sorting) here
+  };
 
   const getAllStudents = () => {
     getSubmittedStudentsViewApi()
       .then((res) => {
-        console.log("res", res);
         setStudent(res.data);
       })
       .catch((err) => {
-        console.log("err", err);
+        console.error("Error fetching students:", err);
       });
   };
 
   const executeScholarShipApplication = () => {
-    console.log("executeScholarShipApplication");
     executeScholarShipApplicationApi()
       .then((res) => {
-        console.log("res", res);
-
         toast({
-          title: "Scholarship Application Submitted Successfully!.",
-          // description: res.message,
+          title: "Scholarship Application Submitted Successfully!",
           status: "success",
           duration: 9000,
           isClosable: true,
@@ -60,7 +51,7 @@ function SubmitedStudents() {
         });
       })
       .catch((err) => {
-        console.log("err", err);
+        console.error("Error executing scholarship application:", err);
         toast({
           title: "Error",
           description: "Operation Failed!",
@@ -73,13 +64,10 @@ function SubmitedStudents() {
   };
 
   const sendEmailToStudentMicrosite = (data) => {
-    console.log("sendEmailToStudentMicrosite", data);
     sendEmailToStudentMicrositeApi(data)
       .then((res) => {
-        // console.log("res", res);
         toast({
-          title: "Email sent successfully!.",
-          // description: res.message,
+          title: "Email sent successfully!",
           status: "success",
           duration: 9000,
           isClosable: true,
@@ -87,7 +75,7 @@ function SubmitedStudents() {
         });
       })
       .catch((err) => {
-        console.log("err", err);
+        console.error("Error sending email:", err);
         toast({
           title: "Error",
           description: "Operation Failed!",
@@ -100,88 +88,44 @@ function SubmitedStudents() {
   };
 
   const triggerFormForMicroSite = () => {
-    // console.log("triggerFormForMicroSite");
     getEmailsofpendingstudentsApi()
       .then((res) => {
-        console.log("res", res);
         const Emails = res?.data?.map((item) => item.email);
-        console.log("Emails", Emails);
         const data = {
           to: Emails,
-          subject: "Fill The forstu Form",
+          subject: "Fill The Form",
           message: "This is the microsite link - http://localhost:3000",
         };
         sendEmailToStudentMicrosite(data);
       })
       .catch((err) => {
-        console.log("err", err);
+        console.error("Error fetching emails:", err);
       });
   };
-
-  // const testMe = () => {
-  //   console.log("testMe clicked");
-
-  //   let data = {
-  //     name: "test",
-  //   };
-  //   studentprofileviewApi(data)
-  //     .then((res) => {
-  //       console.log("res", res);
-  //     })
-  //     .catch((err) => {
-  //       console.log("err", err);
-  //     });
-  // };
 
   const columns = [
     {
       title: "ID",
       dataIndex: "id",
-      filterSearch: true,
-      //   onFilter: (value, record) => record.id.toString().indexOf(value) === 0,
-      //   sorter: (a, b) => a.id - b.id,
+      sorter: (a, b) => a.id - b.id,
       sortDirections: ["descend"],
     },
     {
       title: "Name",
       dataIndex: "candidate_name",
-      filterSearch: true,
-      // filters: userNameFilterList,
-
-      //   onFilter: (value, record) =>
-      //     record.institute_choice_code.indexOf(value) === 0,
-      //   sorter: (a, b) => {
-      //     // Compare names as strings for alphabetical order
-      //     return a.name.localeCompare(b.name);
-      //   },
+      sorter: (a, b) => a.candidate_name.localeCompare(b.candidate_name),
       sortDirections: ["ascend", "descend"],
     },
-
     {
       title: "Course Name",
       dataIndex: "coursename",
-      filterSearch: true,
-      // filters: userRoleFilterList,
-
-      //   onFilter: (value, record) => record.institute_name.indexOf(value) === 0,
-      //   sorter: (a, b) => {
-      //     // Compare usernames as strings for alphabetical order
-      //     return a.institute_name.localeCompare(b.role);
-      //   },
+      sorter: (a, b) => a.coursename.localeCompare(b.coursename),
       sortDirections: ["ascend", "descend"],
     },
-
     {
       title: "Course Current Year",
       dataIndex: "current_year",
-      filterSearch: true,
-      // filters: userRoleFilterList,
-
-      //   onFilter: (value, record) => record.institute_state.indexOf(value) === 0,
-      //   sorter: (a, b) => {
-      //     // Compare usernames as strings for alphabetical order
-      //     return a.institute_state.localeCompare(b.role);
-      //   },
+      sorter: (a, b) => a.current_year - b.current_year,
       sortDirections: ["ascend", "descend"],
     },
   ];
@@ -196,7 +140,7 @@ function SubmitedStudents() {
         <Flex>
           <Box pb={2}>
             <Heading as="h4" size={"md"} my={2}>
-              Submited Student List
+              Submitted Student List
             </Heading>
             <Breadcrumb
               spacing="8px"
@@ -204,15 +148,15 @@ function SubmitedStudents() {
               fontSize={15}
             >
               <BreadcrumbItem>
-                <BreadcrumbLink>
-                  <NavLink to="/dashboard/admin">Dashboard</NavLink>
+                <BreadcrumbLink as={NavLink} to="/dashboard/admin">
+                  Dashboard
                 </BreadcrumbLink>
               </BreadcrumbItem>
-
               <BreadcrumbItem>
-                <NavLink to="/dashboard/admin/student">Student</NavLink>
+                <BreadcrumbLink as={NavLink} to="/dashboard/admin/student">
+                  Student
+                </BreadcrumbLink>
               </BreadcrumbItem>
-
               <BreadcrumbItem isCurrentPage>
                 <BreadcrumbLink>List</BreadcrumbLink>
               </BreadcrumbItem>
@@ -221,17 +165,6 @@ function SubmitedStudents() {
           <Spacer />
         </Flex>
         <Box display={"flex"}>
-          {/* <h1>Send</h1> */}
-          {/* <Button
-            variant={"solid"}
-            bg="primary.main"
-            color={"text.light"}
-            py={4}
-            onClick={triggerFormForMicroSite}
-          >
-            Trigger Form
-          </Button> */}
-
           <Button
             variant={"solid"}
             bg="red.500"

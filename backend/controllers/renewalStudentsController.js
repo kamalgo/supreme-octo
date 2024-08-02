@@ -1,4 +1,4 @@
-
+  
   const { Sequelize, Op } = require("sequelize");
   const { createObjectCsvWriter } = require("csv-writer");
   const ROLES = require("../helpers/roles");
@@ -15,6 +15,7 @@
   } = require("@aws-sdk/client-s3");
   // const User = require("../models/usersModel");
   const Mahadbtprofiles = require("../models/mahadbtModel");
+  const MahadbtRenwalprofiles = require("../models/mahadbtRenewalModel")
 
   const { validationResult } = require("express-validator");
   const { createHmac } = require("crypto");
@@ -48,9 +49,9 @@ exports.getallRenewalStudents = async (req, res) => {
   const searchQuery = req.query.q || ""; // Get search query from request
 
   try {
-    const freshprofiles = await Mahadbtprofiles.findAll({
+    const freshprofiles = await MahadbtRenwalprofiles.findAll({
       where: {
-        candidateName: {
+        Mahadbt_Username: {
           [Op.like]: `%${searchQuery}%`,
         },
       },
@@ -69,7 +70,7 @@ exports.getRenewalStudentDetails = async (req, res) => {
   const studentId = req.params.id;
 
   try {
-    const student = await Mahadbtprofiles.findByPk(studentId);
+    const student = await MahadbtRenwalprofiles.findByPk(studentId);
 
     if (!student) {
       return res.status(404).json({ error: "Student not found" });
@@ -158,7 +159,7 @@ exports.sendCasteDocumentToS3Renewal = async (req, res) => {
     //   data: objectUrl,
     // });
     // Update database entry
-    await Mahadbtprofiles.update(updatedDataOfMain, {
+    await MahadbtRenwalprofiles.update(updatedDataOfMain, {
       where: {
         id: req.body.id,
       },
