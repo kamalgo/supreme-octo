@@ -32,6 +32,7 @@ import RenewalStudents from "./pages/Renewal_Students/RenewalStudents";
 import CoWorkerDash from "./pages/CoWorkerDash/CoWorkerDash";
 import { StudentProfileView } from "./pages/Student_ProfileView/StudentProfileView";
 import viewFreshStudents from "./pages/Fresh_Students/FreshStudentsComponents/viewFreshStudents";
+import viewRenewalStudents from "./pages/Renewal_Students/RenewalStudentsComponents/viewRenewalStudents";
 
 
 function App() {
@@ -225,7 +226,13 @@ StudentProfileView
           component={viewFreshStudents}
           role={ROLES.COWORKER}
         />
-        
+       
+          <ProtectedRoute
+          exact
+          path="/coworker/viewRenewalStudents/:id"
+          component={viewRenewalStudents}
+          role={ROLES.COWORKER}
+        />
 
         {/* 404 route */}
         {/* <Route path="*">

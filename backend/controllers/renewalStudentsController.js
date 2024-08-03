@@ -14,7 +14,6 @@
     DeleteObjectsCommand,
   } = require("@aws-sdk/client-s3");
   // const User = require("../models/usersModel");
-  const Mahadbtprofiles = require("../models/mahadbtModel");
   const MahadbtRenwalprofiles = require("../models/mahadbtRenewalModel")
 
   const { validationResult } = require("express-validator");
@@ -44,6 +43,72 @@
     region: process.env.AWS_BUCKET_REGION, // this is the region that you select in AWS account
   });
 
+
+  exports.updateMahadbtRenewalProfile = (req, res) => {
+    const { id } = req.body;
+    const updatedData = req.body; // Assuming the updated data is in the request body
+  
+    MahadbtRenwalprofiles.update(updatedData, {
+      where: {
+        id: id,
+      },
+    })
+      .then((num) => {
+        if (num == 1) {
+          res.json({
+            success: true,
+            message: "Mahadbt Renewal Profile was updated successfully.",
+          });
+        } else {
+          res.json({
+            success: false,
+            message: `Cannot update Mahadbt Renewal Profile with id=${id}. Maybe the profile was not found or req.body is empty!`,
+          });
+        }
+      })
+      .catch((error) => {
+        res.status(500).json({
+          success: false,
+          message: `Error updating Mahadbt Renewal Profile with id=${id}`,
+          error: error,
+        });
+      });
+  };
+  
+  exports.getSingleMahadbtRenewalProfile = (req, res) => {
+    // console.log("id:::::", req.body);
+    // console.log("clicked on single profile");
+    // res.json({
+    //   success: true,
+    // });
+    // return;
+  
+    // console.log("uour email", req.profile.email);
+    // console.log("hellvgrtvr");
+    // res.send("dddddddd");
+    MahadbtRenwalprofiles.findOne({
+      where: {
+        // ref_code: req.profile.ref_code,
+        // email: req.profile.email,
+        id: req.body.id,
+      },
+    })
+      .then((data) => {
+        data = JSON.stringify(data);
+        data = JSON.parse(data);
+        res.json({
+          success: true,
+          data,
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({
+          success: false,
+          message: "Failed to retrieve Mahadbt Profiles",
+          error: error,
+        });
+      });
+  };
 
 exports.getallRenewalStudents = async (req, res) => {
   const searchQuery = req.query.q || ""; // Get search query from request
@@ -174,4 +239,8 @@ exports.sendCasteDocumentToS3Renewal = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
+
+
 
