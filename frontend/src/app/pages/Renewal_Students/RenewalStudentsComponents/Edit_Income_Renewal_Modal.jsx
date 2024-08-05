@@ -1,0 +1,104 @@
+// Edit_Income_Renewal_Modal.jsx
+import React, { useState } from 'react';
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  useToast
+} from "@chakra-ui/react";
+import { editRenewalStudentApi } from '../../../api/RenewalStudentsApi/RenewalStudentsApi';
+
+const Edit_Income_Renewal_Modal = ({ isOpen, onClose, id }) => {
+  const toast = useToast();
+  const [formData, setFormData] = useState({
+    annualIncome: '',
+    incomeCertYesNo: '',
+    incomeCertNumber: '',
+    incomeIssuingAuthority: '',
+    incomeIssueDate: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        id,
+        ...formData
+      };
+      await editRenewalStudentApi(payload);
+      toast({
+        title: "Income details updated.",
+        description: "The income details have been successfully updated.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      onClose(); // Close the modal after successful submission
+    } catch (error) {
+      toast({
+        title: "An error occurred.",
+        description: "Unable to update income details.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      console.error("Error updating income details:", error);
+    }
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Edit Income Details</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <FormControl>
+            <FormLabel>Annual Income</FormLabel>
+            <Input name="annualIncome" value={formData.annualIncome} onChange={handleChange} />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>Do you have income certificate?</FormLabel>
+            <Input name="incomeCertYesNo" value={formData.incomeCertYesNo} onChange={handleChange} />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>Income Certificate Number</FormLabel>
+            <Input name="incomeCertNumber" value={formData.incomeCertNumber} onChange={handleChange} />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>Income Certificate Issuing Authority</FormLabel>
+            <Input name="incomeIssuingAuthority" value={formData.incomeIssuingAuthority} onChange={handleChange} />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>Income Certificate Issuing Date</FormLabel>
+            <Input type="date" name="incomeIssueDate" value={formData.incomeIssueDate} onChange={handleChange} />
+          </FormControl>
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+            Save
+          </Button>
+          <Button variant="ghost" onClick={onClose}>Cancel</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default Edit_Income_Renewal_Modal;

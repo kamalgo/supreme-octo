@@ -393,7 +393,7 @@ const RenewalStudents = () => {
     },
     {
       title: "Name",
-      dataIndex: "Mahadbt_Username",
+      dataIndex: "candidateName",
       key: "candidateName",
     },
     {

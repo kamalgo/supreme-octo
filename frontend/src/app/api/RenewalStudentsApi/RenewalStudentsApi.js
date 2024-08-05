@@ -119,6 +119,8 @@ export async function fetchRecordDetails(id) {
     return response.json();
   }
 
+  
+
   export async function feeReceiptS3Renewal(formData) {
     const { accessToken } = isAuthenticated();
   
@@ -146,3 +148,4 @@ export async function fetchRecordDetails(id) {
       throw error;
     }
   }
+
