@@ -10,6 +10,7 @@ import Edit_Prsnl_Renewal_Modal from "./Edit_Prsnl_Renewal_Modal";
 import Edit_Income_Renewal_Modal from "./Edit_Income_Renewal_Modal";
 import Edit_Current_Course_Renewal_Modal from "./Edit_Current_Course_Renewal_Modal"
 import Edit_Hostel_Renewal_Modal from "./Edit_Hostel_Renewal_Modal"
+import Edit_Scheme_Renewal_Modal from "./Edit_Scheme_Renewal_Modal"
 
 function viewRenewalStudents() {
   
@@ -21,6 +22,8 @@ function viewRenewalStudents() {
   const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false);
   const [isCurrentCourseModalOpen, setIsCurrentCourseModalOpen] = useState(false);
   const [isHostelModalOpen, setIsHostelModalOpen] = useState(false);
+  const [isSchemeModalOpen, setIsSchemeModalOpen] = useState(false);
+
 
   
   //modal for upload
@@ -85,6 +88,12 @@ function viewRenewalStudents() {
     setSelectedId(id);
     setIsHostelModalOpen(true);
   };
+
+  const openSchemeModalWithId = () => {
+    setSelectedId(id);
+    setIsSchemeModalOpen(true);
+  };
+  
   
 
 
@@ -313,7 +322,7 @@ function viewRenewalStudents() {
 
           <AccordionItem>
             <h2>
-            <AccordionButton sx={{ backgroundColor: 'blue.700', color: 'white' }}>
+            <AccordionButton sx={{ backgroundColor: 'blue.900', color: 'white' }}>
                 <Box as="span" flex="1" textAlign="left">
                   <Heading as="h2" size="md" p={"20px"}>
                     Current Course
@@ -868,12 +877,152 @@ function viewRenewalStudents() {
               </SimpleGrid>
             </AccordionPanel>
           </AccordionItem>
+
+          <AccordionItem>
+            <h2>
+            <AccordionButton sx={{ backgroundColor: 'blue.900', color: 'white' }}>
+                <Box as="span" flex="1" textAlign="left">
+                  <Heading as="h2" size="md" p={"20px"}>
+                    Scheme Wise Details
+                  </Heading>
+                </Box>
+                <button
+        style={{
+          marginLeft: "auto",
+          padding: "5px 10px",
+          fontSize: "14px",
+          backgroundColor: "#3182CE",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+          borderRadius: "4px",
+          zIndex: 2,
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          openSchemeModalWithId();
+        }}
+      >
+        Edit
+      </button>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              <SimpleGrid columns={3} spacing={10}>
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  p={"10px"}
+                >
+                  <Heading pr={2} as="h5" size="sm">
+                    Previous year application id
+                  </Heading>
+
+                  <Text fontSize="md">
+                    {viewData?.previousYearApplicationId === null
+                      ? "NA"
+                      : viewData?.previousYearApplicationId}
+                  </Text>
+                </Box>
+
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  p={"10px"}
+                >
+                  <Heading pr={2} as="h5" size="sm">
+                    Number of beneficiary in family ?
+                  </Heading>
+
+                  <Text fontSize="md">
+                    {viewData?.numberOfBeneficiaryInFamily === null
+                      ? "NA"
+                      : viewData?.numberOfBeneficiaryInFamily}
+                  </Text>
+                </Box>
+
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  p={"10px"}
+                >
+                  <Heading pr={2} as="h5" size="sm">
+                    How many boy child ?
+                  </Heading>
+
+                  <Text fontSize="md">
+                    {viewData?.howManyBoysChild === null
+                      ? "NA"
+                      : viewData?.howManyBoysChild}
+                  </Text>
+                </Box>
+
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  p={"10px"}
+                >
+                  <Heading pr={2} as="h5" size="sm">
+                    Is your parent AlphaBhuDharak
+                  </Heading>
+
+                  <Text fontSize="md">
+                    {viewData?.isYourParentAlphabhudarak === null
+                      ? "NA"
+                      : viewData?.isYourParentAlphabhudarak}
+                  </Text>
+                </Box>
+
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  p={"10px"}
+                >
+                  <Heading pr={2} as="h5" size="sm">
+                    Is your parent registered labour ?
+                  </Heading>
+
+                  <Text fontSize="md">
+                    {viewData?.isRegisteredLabour === null
+                      ? "NA"
+                      : viewData?.isRegisteredLabour}
+                  </Text>
+                </Box>
+
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  p={"10px"}
+                >
+                  <Heading pr={2} as="h5" size="sm">
+                    Admitted under EWS ?
+                  </Heading>
+
+                  <Text fontSize="md">
+                    {viewData?.admittedUnderEws === null
+                      ? "NA"
+                      : viewData?.admittedUnderEws}
+                  </Text>
+                </Box>
+
+              </SimpleGrid>
+            </AccordionPanel>
+          </AccordionItem>
+
         </Accordion>
         <Edit_Prsnl_Renewal_Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} id={selectedId} />
         {/* <Upload_Document_Modal isOpen={isModalOpenUpload} onClose={() => setisModalOpenUpload(false)}  /> */}
         <Edit_Income_Renewal_Modal isOpen={isIncomeModalOpen} onClose={() => setIsIncomeModalOpen(false)} id={selectedId} />
         <Edit_Current_Course_Renewal_Modal isOpen={isCurrentCourseModalOpen} onClose={() => setIsCurrentCourseModalOpen(false)} id={selectedId} />
         <Edit_Hostel_Renewal_Modal isOpen={isHostelModalOpen} onClose={() => setIsHostelModalOpen(false)} id={selectedId} />
+        <Edit_Scheme_Renewal_Modal isOpen={isSchemeModalOpen} onClose={() => setIsSchemeModalOpen(false)} id={selectedId} />
 
       </Base>
     </div>

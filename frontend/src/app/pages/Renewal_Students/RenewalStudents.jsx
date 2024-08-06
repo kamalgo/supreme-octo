@@ -1,123 +1,40 @@
-// import React, { useState, useEffect } from "react";
-// import { Heading, Flex } from "@chakra-ui/react";
-// import { Table, Input } from "antd";
-// import Base from "../../components/Base";
-// import { RenewalStudentApi } from "../../api/RenewalStudentsApi/RenewalStudentsApi";
-
-// const { Search } = Input;
-
-// const RenewalStudents = () => {
-//   const [data, setData] = useState([]);
-//   const [searchText, setSearchText] = useState("");
-//   const [filteredData, setFilteredData] = useState([]);
-
-//   // Fetch data from API
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await RenewalStudentApi();
-//         setData(response.data); // Adjust according to your API response structure
-//         setFilteredData(response.data);
-//       } catch (error) {
-//         console.error("Error fetching data:", error);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   // Handle search
-//   const handleSearch = (value) => {
-//     setSearchText(value);
-//     const filtered = data.filter(
-//       (item) => item.name.toLowerCase().includes(value.toLowerCase()) // Adjust the property to search by
-//     );
-//     setFilteredData(filtered);
-//   };
-
-//   // Columns for the Ant Design table
-//   const columns = [
-//     {
-//       title: "Name",
-//       dataIndex: "Mahadbt_Username",
-//       key: "Mahadbt_Username",
-//     },
-//     {
-//       title: "Gender",
-//       dataIndex: "gender",
-//       key: "gender",
-//     },
-//     // Add other columns as needed
-//   ];
-
-//   return (
-//     <Base>
-//       <Flex justifyContent="center" alignItems="center">
-//         <Heading as="h1" size="xl">
-//           Renewal Students
-//         </Heading>
-//       </Flex>
-
-//       <div style={{ padding: "20px" }}>
-//         <Search
-//           placeholder="Search students"
-//           onSearch={handleSearch}
-//           style={{ marginBottom: "20px" }}
-//           enterButton
-//         />
-//         <Table
-//           dataSource={filteredData}
-//           columns={columns}
-//           rowKey="id" // Ensure each row has a unique 'id'
-//         />
-//       </div>
-//     </Base>
-//   );
-// };
-
-// export default RenewalStudents;
-
 // import { NavLink } from 'react-router-dom';
 // import React, { useState, useEffect } from "react";
-// import { Heading, Flex } from "@chakra-ui/react";
 // import { Table, Input, Button, Modal, Upload, message } from "antd";
 // import { UploadOutlined } from "@ant-design/icons";
 // import Base from "../../components/Base";
-// import { RenewalStudentApi, castecertS3Fresh, fetchRecordDetails } from "../../api/RenewalStudentsApi/RenewalStudentsApi";
-// // import reactRouterDom from "react-router-dom";
+// import {
+//   RenewalStudentApi, fetchRecordDetails,
+//   incomeDocS3Renewal, feeReceiptS3Renewal, hostelCertS3Renewal, alpabudharakCertS3Renewal,
+//   declarationCertS3Renewal, registeredLabourCertS3Renewal, studentPanCardS3Renewal, fatherPanCardS3Renewal,
+//   fatherAadharCardS3Renewal, casteValidityS3Renewal
+// } from "../../api/RenewalStudentsApi/RenewalStudentsApi";
 
 // const { Search } = Input;
 
 // const RenewalStudents = () => {
 //   const [data, setData] = useState([]);
 //   const [searchText, setSearchText] = useState("");
-//   const [filteredData, setFilteredData] = useState([]);
 //   const [selectedRecord, setSelectedRecord] = useState(null);
 //   const [isModalVisible, setIsModalVisible] = useState(false);
 //   const [recordDetails, setRecordDetails] = useState(null);
 
-//   // Fetch data from API
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await RenewalStudentApi();
-//         setData(response.data); // Adjust according to your API response structure
-//         setFilteredData(response.data);
-//       } catch (error) {
-//         console.error("Error fetching data:", error);
-//       }
-//     };
+//   const fetchData = async (query = "") => {
+//     try {
+//       const response = await RenewalStudentApi(query);
+//       setData(response.data); // Adjust according to your API response structure
+//     } catch (error) {
+//       console.error("Error fetching data:", error);
+//     }
+//   };
 
+//   useEffect(() => {
 //     fetchData();
 //   }, []);
 
-//   // Handle search
 //   const handleSearch = (value) => {
 //     setSearchText(value);
-//     const filtered = data.filter(
-//       (item) => item.Mahadbt_Username.toLowerCase().includes(value.toLowerCase()) // Adjust the property to search by
-//     );
-//     setFilteredData(filtered);
+//     fetchData(value);
 //   };
 
 //   const handleUploadDocuments = async (record) => {
@@ -143,13 +60,49 @@
 //     setRecordDetails(null);
 //   };
 
-//   const handleUpload = async ({ file, onSuccess, onError }) => {
+//   const handleUpload = async ({ file, onSuccess, onError }, documentType) => {
 //     const formData = new FormData();
 //     formData.append('file', file);
 //     formData.append('id', selectedRecord.id);
 
 //     try {
-//       const response = await castecertS3Fresh(formData);
+//       let uploadFunction;
+//       switch (documentType) {
+//         case "income":
+//           uploadFunction = incomeDocS3Renewal;
+//           break;
+//         case "fee":
+//           uploadFunction = feeReceiptS3Renewal;
+//           break;
+//         case "hostel":
+//           uploadFunction = hostelCertS3Renewal;
+//           break;
+//         case "alpabudharak":
+//           uploadFunction = alpabudharakCertS3Renewal;
+//           break;
+//         case "declaration":
+//           uploadFunction = declarationCertS3Renewal;
+//           break;
+//         case "registeredLabour":
+//           uploadFunction = registeredLabourCertS3Renewal;
+//           break;
+//         case "studentPanCard":
+//           uploadFunction = studentPanCardS3Renewal;
+//           break;
+//         case "fatherPanCard":
+//           uploadFunction = fatherPanCardS3Renewal;
+//           break;
+//         case "fatherAadharCard":
+//           uploadFunction = fatherAadharCardS3Renewal;
+//           break;
+//         case "casteValidity":
+//           uploadFunction = casteValidityS3Renewal;
+//           break;
+//         default:
+//           throw new Error("Unknown document type");
+//       }
+
+//       const response = await uploadFunction(formData);
 //       if (response.success) {
 //         message.success(`${file.name} file uploaded successfully.`);
 //         onSuccess();
@@ -167,7 +120,6 @@
 //     }
 //   };
 
-//   // Columns for the Ant Design table
 //   const columns = [
 //     {
 //       title: "ID",
@@ -176,22 +128,24 @@
 //     },
 //     {
 //       title: "Name",
-//       dataIndex: "Mahadbt_Username",
+//       dataIndex: "candidateName",
 //       key: "candidateName",
 //     },
 //     {
 //       title: "Gender",
-//       dataIndex: "casteDoc",
+//       dataIndex: "gender",
 //       key: "gender",
 //     },
 //     {
 //       title: 'Actions',
 //       key: 'actions',
-//       render: (_, record) => (<>
-//         <Button onClick={() => handleUploadDocuments(record)}>Upload Documents
-//         </Button>
-//         <NavLink to={`/coworker/viewFreshStudents/${record.id}`}>
-//           <Button>View Fresh Students</Button>
+//       render: (_, record) => (
+//         <>
+//           <Button onClick={() => handleUploadDocuments(record)} style={{ marginRight: 10 }}>
+//             Upload Documents
+//           </Button>
+//           <NavLink to={`/coworker/viewRenewalStudents/${record.id}`}>
+//             <Button>View Renewal Students</Button>
 //           </NavLink>
 //         </>
 //       ),
@@ -200,12 +154,6 @@
 
 //   return (
 //     <Base>
-//       <Flex justifyContent="center" alignItems="center">
-//         <Heading as="h1" size="xl">
-//           Renewal Students
-//         </Heading>
-//       </Flex>
-
 //       <div style={{ padding: "20px" }}>
 //         <Search
 //           placeholder="Search students"
@@ -214,15 +162,16 @@
 //           enterButton
 //         />
 //         <Table
-//           dataSource={filteredData}
+//           dataSource={data}
 //           columns={columns}
-//           rowKey="id" // Ensure each row has a unique 'id'
+//           rowKey="id"
 //         />
 //         <Modal
 //           title="Upload Documents"
 //           visible={isModalVisible}
 //           onOk={handleModalOk}
 //           onCancel={handleModalCancel}
+//           width={600}
 //           footer={[
 //             <Button key="cancel" onClick={handleModalCancel}>
 //               Cancel
@@ -233,26 +182,169 @@
 //             <div>
 //               <p><strong>ID:</strong> {selectedRecord.id}</p>
 //               <p><strong>Name:</strong> {selectedRecord.candidateName}</p>
-//               <div style={{ marginTop: 20 }}>
+//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
 //                 <Upload
-//                   customRequest={(options) => handleUpload(options)}
+//                   customRequest={(options) => handleUpload(options, "income")}
 //                   showUploadList={false}
 //                 >
-//                   <Button icon={<UploadOutlined />}>Upload Caste Certificate</Button>
+//                   <Button icon={<UploadOutlined />}>Upload Income Document</Button>
 //                 </Upload>
-//                 {recordDetails.casteDoc && (
+//                 {recordDetails.incomeDoc && (
 //                   <Button
-//                     style={{ marginLeft: 10 }}
-//                     onClick={() => window.open(recordDetails.casteDoc, "_blank")}
+//                     style={{ marginLeft: 65 }}
+//                     onClick={() => window.open(recordDetails.incomeDoc, "_blank")}
 //                   >
-//                     View Caste Certificate
+//                     View Income Document
 //                   </Button>
 //                 )}
 //               </div>
-//               {/* Add more sections for other document types as needed */}
+//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+//                 <Upload
+//                   customRequest={(options) => handleUpload(options, "fee")}
+//                   showUploadList={false}
+//                 >
+//                   <Button icon={<UploadOutlined />}>Upload Fee Receipt</Button>
+//                 </Upload>
+//                 {recordDetails.feeReceiptDoc && (
+//                   <Button
+//                     style={{ marginLeft: 110 }}
+//                     onClick={() => window.open(recordDetails.feeReceiptDoc, "_blank")}
+//                   >
+//                     View Fee Receipt
+//                   </Button>
+//                 )}
+//               </div>
+//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+//                 <Upload
+//                   customRequest={(options) => handleUpload(options, "hostel")}
+//                   showUploadList={false}
+//                 >
+//                   <Button icon={<UploadOutlined />}>Upload Hostel Certificate</Button>
+//                 </Upload>
+//                 {recordDetails.hostelCertificate && (
+//                   <Button
+//                     style={{ marginLeft: 75 }}
+//                     onClick={() => window.open(recordDetails.hostelCertificate, "_blank")}
+//                   >
+//                     View Hostel Certificate
+//                   </Button>
+//                 )}
+//               </div>
+//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+//                 <Upload
+//                   customRequest={(options) => handleUpload(options, "alpabudharak")}
+//                   showUploadList={false}
+//                 >
+//                   <Button icon={<UploadOutlined />}>Upload Alpabudharak Certificate</Button>
+//                 </Upload>
+//                 {recordDetails.alphabhudharakDoc && (
+//                   <Button
+//                     style={{ marginLeft: 30 }}
+//                     onClick={() => window.open(recordDetails.alphabhudharakDoc, "_blank")}
+//                   >
+//                     View Alpabudharak Certificate
+//                   </Button>
+//                 )}
+//               </div>
+//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+//                 <Upload
+//                   customRequest={(options) => handleUpload(options, "declaration")}
+//                   showUploadList={false}
+//                 >
+//                   <Button icon={<UploadOutlined />}>Upload Declaration Certificate</Button>
+//                 </Upload>
+//                 {recordDetails.declarationCertDoc && (
+//                   <Button
+//                     style={{ marginLeft: 45 }}
+//                     onClick={() => window.open(recordDetails.declarationCertDoc, "_blank")}
+//                   >
+//                     View Declaration Certificate
+//                   </Button>
+//                 )}
+//               </div>
+//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+//                 <Upload
+//                   customRequest={(options) => handleUpload(options, "registeredLabour")}
+//                   showUploadList={false}
+//                 >
+//                   <Button icon={<UploadOutlined />}>Upload Registered Labour Certificate</Button>
+//                 </Upload>
+//                 {recordDetails.labourDoc && (
+//                   <Button
+//                     style={{ marginLeft: 6 }}
+//                     onClick={() => window.open(recordDetails.labourDoc, "_blank")}
+//                   >
+//                     View Registered Labour Certificate
+//                   </Button>
+//                 )}
+//               </div>
+//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+//                 <Upload
+//                   customRequest={(options) => handleUpload(options, "studentPanCard")}
+//                   showUploadList={false}
+//                 >
+//                   <Button icon={<UploadOutlined />}>Upload Student PAN Card</Button>
+//                 </Upload>
+//                 {recordDetails.studentPancardDoc && (
+//                   <Button
+//                     style={{ marginLeft: 75 }}
+//                     onClick={() => window.open(recordDetails.studentPancardDoc, "_blank")}
+//                   >
+//                     View Student PAN Card
+//                   </Button>
+//                 )}
+//               </div>
+//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+//                 <Upload
+//                   customRequest={(options) => handleUpload(options, "fatherPanCard")}
+//                   showUploadList={false}
+//                 >
+//                   <Button icon={<UploadOutlined />}>Upload Father's PAN Card</Button>
+//                 </Upload>
+//                 {recordDetails.fatherPancardDoc && (
+//                   <Button
+//                     style={{ marginLeft: 52 }}
+//                     onClick={() => window.open(recordDetails.fatherPancardDoc, "_blank")}
+//                   >
+//                     View Father's PAN Card
+//                   </Button>
+//                 )}
+//               </div>
+//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+//                 <Upload
+//                   customRequest={(options) => handleUpload(options, "fatherAadharCard")}
+//                   showUploadList={false}
+//                 >
+//                   <Button icon={<UploadOutlined />}>Upload Father's Aadhar Card</Button>
+//                 </Upload>
+//                 {recordDetails.fatherAadharcardDoc && (
+//                   <Button
+//                     style={{ marginLeft: 52 }}
+//                     onClick={() => window.open(recordDetails.fatherAadharcardDoc, "_blank")}
+//                   >
+//                     View Father's Aadhar Card
+//                   </Button>
+//                 )}
+//               </div>
+//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+//                 <Upload
+//                   customRequest={(options) => handleUpload(options, "casteValidity")}
+//                   showUploadList={false}
+//                 >
+//                   <Button icon={<UploadOutlined />}>Upload Caste Validity</Button>
+//                 </Upload>
+//                 {recordDetails.casteValidityDoc && (
+//                   <Button
+//                     style={{ marginLeft: 52 }}
+//                     onClick={() => window.open(recordDetails.casteValidityDoc, "_blank")}
+//                   >
+//                     View Caste Validity
+//                   </Button>
+//                 )}
+//               </div>
 //             </div>
 //           ) : (
-//             <p>No details available</p>
+//             <p>Loading...</p>
 //           )}
 //         </Modal>
 //       </div>
@@ -262,15 +354,18 @@
 
 // export default RenewalStudents;
 
-
-import { NavLink } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import { Table, Input, Button, Modal, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import { NavLink } from 'react-router-dom';
 import Base from "../../components/Base";
 import {
-  RenewalStudentApi, castecertS3Fresh, fetchRecordDetails
-} from "../../api/RenewalStudentsApi/RenewalStudentsApi"; // Update this path as needed
+  RenewalStudentApi, fetchRecordDetails,
+  incomeDocS3Renewal, feeReceiptS3Renewal, hostelCertS3Renewal, alpabudharakCertS3Renewal,
+  declarationCertS3Renewal, registeredLabourCertS3Renewal, studentPanCardS3Renewal, fatherPanCardS3Renewal,
+  fatherAadharCardS3Renewal, casteValidityS3Renewal, allotmentLetterS3Renewal,leavingCertS3Renewal,
+  rationCardS3Renewal, previousYearMarksheetS3Renewal, gapCertS3Renewal
+} from "../../api/RenewalStudentsApi/RenewalStudentsApi";
 
 const { Search } = Input;
 
@@ -330,9 +425,6 @@ const RenewalStudents = () => {
     try {
       let uploadFunction;
       switch (documentType) {
-        case "caste":
-          uploadFunction = castecertS3Fresh;
-          break;
         case "income":
           uploadFunction = incomeDocS3Renewal;
           break;
@@ -362,6 +454,21 @@ const RenewalStudents = () => {
           break;
         case "casteValidity":
           uploadFunction = casteValidityS3Renewal;
+          break;
+        case "allotmentLetter":
+          uploadFunction = allotmentLetterS3Renewal;
+          break;
+        case "leavingCert":
+          uploadFunction = leavingCertS3Renewal;
+          break;
+        case "rationCard":
+          uploadFunction = rationCardS3Renewal;
+          break;
+        case "previousYearMarksheet":
+          uploadFunction = previousYearMarksheetS3Renewal;
+          break;
+        case "gapCert":
+          uploadFunction = gapCertS3Renewal;
           break;
         default:
           throw new Error("Unknown document type");
@@ -436,33 +543,19 @@ const RenewalStudents = () => {
           visible={isModalVisible}
           onOk={handleModalOk}
           onCancel={handleModalCancel}
+          width={650}
           footer={[
-            <Button key="cancel" onClick={handleModalCancel}>
+            <Button key="back" onClick={handleModalCancel}>
               Cancel
-            </Button>
+            </Button>,
+            <Button key="submit" type="primary" onClick={handleModalOk}>
+              OK
+            </Button>,
           ]}
         >
-          {selectedRecord && recordDetails ? (
-            <div>
-              <p><strong>ID:</strong> {selectedRecord.id}</p>
-              <p><strong>Name:</strong> {selectedRecord.candidateName}</p>
-              <div style={{ marginTop: 20 }}>
-                <Upload
-                  customRequest={(options) => handleUpload(options, "caste")}
-                  showUploadList={false}
-                >
-                  <Button icon={<UploadOutlined />}>Upload Caste Certificate</Button>
-                </Upload>
-                {recordDetails.casteDoc && (
-                  <Button
-                    style={{ marginLeft: 10 }}
-                    onClick={() => window.open(recordDetails.casteDoc, "_blank")}
-                  >
-                    View Caste Certificate
-                  </Button>
-                )}
-              </div>
-              <div style={{ marginTop: 20 }}>
+          {recordDetails && (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                 <Upload
                   customRequest={(options) => handleUpload(options, "income")}
                   showUploadList={false}
@@ -471,14 +564,14 @@ const RenewalStudents = () => {
                 </Upload>
                 {recordDetails.incomeDoc && (
                   <Button
-                    style={{ marginLeft: 10 }}
+                    style={{ marginLeft: 70 }}
                     onClick={() => window.open(recordDetails.incomeDoc, "_blank")}
                   >
                     View Income Document
                   </Button>
                 )}
               </div>
-              <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                 <Upload
                   customRequest={(options) => handleUpload(options, "fee")}
                   showUploadList={false}
@@ -487,126 +580,126 @@ const RenewalStudents = () => {
                 </Upload>
                 {recordDetails.feeReceiptDoc && (
                   <Button
-                    style={{ marginLeft: 10 }}
+                    style={{ marginLeft: 112 }}
                     onClick={() => window.open(recordDetails.feeReceiptDoc, "_blank")}
                   >
                     View Fee Receipt
                   </Button>
                 )}
               </div>
-              <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                 <Upload
                   customRequest={(options) => handleUpload(options, "hostel")}
                   showUploadList={false}
                 >
                   <Button icon={<UploadOutlined />}>Upload Hostel Certificate</Button>
                 </Upload>
-                {recordDetails.hostelDoc && (
+                {recordDetails.hostelCertificate && (
                   <Button
-                    style={{ marginLeft: 10 }}
-                    onClick={() => window.open(recordDetails.hostelDoc, "_blank")}
+                    style={{ marginLeft: 75 }}
+                    onClick={() => window.open(recordDetails.hostelCertificate, "_blank")}
                   >
                     View Hostel Certificate
                   </Button>
                 )}
               </div>
-              <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                 <Upload
                   customRequest={(options) => handleUpload(options, "alpabudharak")}
                   showUploadList={false}
                 >
-                  <Button icon={<UploadOutlined />}>Upload Alpabudharak Certificate</Button>
+                  <Button icon={<UploadOutlined />}>Upload Alpa Budharak Certificate</Button>
                 </Upload>
-                {recordDetails.alpabhudharakDoc && (
+                {recordDetails.alphabhudharakDoc && (
                   <Button
-                    style={{ marginLeft: 10 }}
-                    onClick={() => window.open(recordDetails.alpabhudharakDoc, "_blank")}
+                    style={{ marginLeft: 30 }}
+                    onClick={() => window.open(recordDetails.alphabhudharakDoc, "_blank")}
                   >
-                    View Alpabudharak Certificate
+                    View Alpa Budharak Certificate
                   </Button>
                 )}
               </div>
-              <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                 <Upload
                   customRequest={(options) => handleUpload(options, "declaration")}
                   showUploadList={false}
                 >
                   <Button icon={<UploadOutlined />}>Upload Declaration Certificate</Button>
                 </Upload>
-                {recordDetails.declarationCertificateDoc && (
+                {recordDetails.declarationCertDoc && (
                   <Button
-                    style={{ marginLeft: 10 }}
-                    onClick={() => window.open(recordDetails.declarationCertificateDoc, "_blank")}
+                    style={{ marginLeft: 52 }}
+                    onClick={() => window.open(recordDetails.declarationCertDoc, "_blank")}
                   >
                     View Declaration Certificate
                   </Button>
                 )}
               </div>
-              <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                 <Upload
                   customRequest={(options) => handleUpload(options, "registeredLabour")}
                   showUploadList={false}
                 >
-                  <Button icon={<UploadOutlined />}>Upload Registered Labour Certificate</Button>
+                  <Button icon={<UploadOutlined />}>Upload Labour Certificate</Button>
                 </Upload>
-                {recordDetails.registeredLabourDoc && (
+                {recordDetails.labourDoc && (
                   <Button
-                    style={{ marginLeft: 10 }}
-                    onClick={() => window.open(recordDetails.registeredLabourDoc, "_blank")}
+                    style={{ marginLeft: 80 }}
+                    onClick={() => window.open(recordDetails.labourDoc, "_blank")}
                   >
-                    View Registered Labour Certificate
+                    View Labour Certificate
                   </Button>
                 )}
               </div>
-              <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                 <Upload
                   customRequest={(options) => handleUpload(options, "studentPanCard")}
                   showUploadList={false}
                 >
                   <Button icon={<UploadOutlined />}>Upload Student Pan Card</Button>
                 </Upload>
-                {recordDetails.studentPanCardDoc && (
+                {recordDetails.studentPancardDoc && (
                   <Button
-                    style={{ marginLeft: 10 }}
-                    onClick={() => window.open(recordDetails.studentPanCardDoc, "_blank")}
+                    style={{ marginLeft: 80 }}
+                    onClick={() => window.open(recordDetails.studentPancardDoc, "_blank")}
                   >
                     View Student Pan Card
                   </Button>
                 )}
               </div>
-              <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                 <Upload
                   customRequest={(options) => handleUpload(options, "fatherPanCard")}
                   showUploadList={false}
                 >
                   <Button icon={<UploadOutlined />}>Upload Father Pan Card</Button>
                 </Upload>
-                {recordDetails.fatherPanCardDoc && (
+                {recordDetails.fatherPancardDoc && (
                   <Button
-                    style={{ marginLeft: 10 }}
-                    onClick={() => window.open(recordDetails.fatherPanCardDoc, "_blank")}
+                    style={{ marginLeft: 90 }}
+                    onClick={() => window.open(recordDetails.fatherPancardDoc, "_blank")}
                   >
                     View Father Pan Card
                   </Button>
                 )}
               </div>
-              <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                 <Upload
                   customRequest={(options) => handleUpload(options, "fatherAadharCard")}
                   showUploadList={false}
                 >
                   <Button icon={<UploadOutlined />}>Upload Father Aadhar Card</Button>
                 </Upload>
-                {recordDetails.fatherAadharCardDoc && (
+                {recordDetails.fatherAadharcardDoc && (
                   <Button
-                    style={{ marginLeft: 10 }}
-                    onClick={() => window.open(recordDetails.fatherAadharCardDoc, "_blank")}
+                    style={{ marginLeft: 70 }}
+                    onClick={() => window.open(recordDetails.fatherAadharcardDoc, "_blank")}
                   >
                     View Father Aadhar Card
                   </Button>
                 )}
               </div>
-              <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                 <Upload
                   customRequest={(options) => handleUpload(options, "casteValidity")}
                   showUploadList={false}
@@ -615,16 +708,94 @@ const RenewalStudents = () => {
                 </Upload>
                 {recordDetails.casteValidityDoc && (
                   <Button
-                    style={{ marginLeft: 10 }}
+                    style={{ marginLeft: 40 }}
                     onClick={() => window.open(recordDetails.casteValidityDoc, "_blank")}
                   >
                     View Caste Validity Certificate
                   </Button>
                 )}
               </div>
-            </div>
-          ) : (
-            <p>Loading...</p>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "allotmentLetter")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Allotment Letter</Button>
+                </Upload>
+                {recordDetails.allotmentLetterDoc && (
+                  <Button
+                    style={{ marginLeft: 90 }}
+                    onClick={() => window.open(recordDetails.allotmentLetterDoc, "_blank")}
+                  >
+                    View Allotment Letter
+                  </Button>
+                )}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "leavingCert")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Leaving Certificate</Button>
+                </Upload>
+                {recordDetails.leavingCertDoc && (
+                  <Button
+                    style={{ marginLeft: 80 }}
+                    onClick={() => window.open(recordDetails.leavingCertDoc, "_blank")}
+                  >
+                    View Leaving Certificate
+                  </Button>
+                )}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "rationCard")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Ration Card</Button>
+                </Upload>
+                {recordDetails.rationCardDoc && (
+                  <Button
+                    style={{ marginLeft: 120 }}
+                    onClick={() => window.open(recordDetails.rationCardDoc, "_blank")}
+                  >
+                    View Ration Card
+                  </Button>
+                )}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "previousYearMarksheet")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Previous Year Marksheet</Button>
+                </Upload>
+                {recordDetails.previousYearMarksheetDoc && (
+                  <Button
+                    style={{ marginLeft: 52 }}
+                    onClick={() => window.open(recordDetails.previousYearMarksheetDoc, "_blank")}
+                  >
+                    View Previous Year Marksheet
+                  </Button>
+                )}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+                <Upload
+                  customRequest={(options) => handleUpload(options, "gapCert")}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload GAP Certificate</Button>
+                </Upload>
+                {recordDetails.gapCertDoc && (
+                  <Button
+                    style={{ marginLeft: 100 }}
+                    onClick={() => window.open(recordDetails.gapCertDoc, "_blank")}
+                  >
+                    View GAP Certificate
+                  </Button>
+                )}
+              </div>
+            </>
           )}
         </Modal>
       </div>
@@ -633,4 +804,11 @@ const RenewalStudents = () => {
 };
 
 export default RenewalStudents;
+
+
+
+
+
+
+
 

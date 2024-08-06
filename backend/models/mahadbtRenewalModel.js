@@ -259,10 +259,89 @@ const RenewalMahadbt = sequelize.define('RenewalMahadbt', {
         type: DataTypes.STRING,
         allowNull: false,
         field: 'Admited_Under_EWS',
-    },
+    },  
     
-
-
+    //documents section
+    incomeDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Income_Certificate_URL',
+    },
+    feeReceiptDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Fees_Admission_Receipt_bonafide_Doc',
+    },
+    hostelCertificate: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Warden_Certificate_Doc',
+    },
+    alphabhudharakDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'AlphaBhuDharak_Doc',
+    },
+    declarationCertDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Declaration_Certificate',
+    },
+    labourDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Labour_Doc',
+    },
+    studentPancardDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Student_PanCard_Doc',
+    },
+    fatherPancardDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Father_PanCard_Doc',
+    },
+    fatherAadharcardDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Father_Guradian_Adhar_Card_Doc',
+    },
+    casteValidityDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Caste_Validity',
+    },
+    leavingCertDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Leaving_Cerificate_Doc',
+    },
+    allotmentLetterDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'admission_letter_doc',
+    },
+    leavingCertDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Leaving_Cerificate_Doc',
+    },
+    rationCardDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Ration_Card',
+    },
+    previousYearMarksheetDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Marksheet_Passed_Year',
+    },
+    gapCertDoc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        field: 'Gap_Doc',
+    },
 
 }, {
     tableName: 'renewal_mahadbt',

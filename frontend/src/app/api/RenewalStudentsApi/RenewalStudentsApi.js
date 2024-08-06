@@ -22,35 +22,6 @@ export async function RenewalStudentApi() {
     return response.json();
   }
 
-  export async function castecertS3Fresh(formData) {
-    const { accessToken } = isAuthenticated();
-  
-    try {
-      const response = await fetch(`${ENDPOINT}/sendCasteDocumentToS3Renewal`, {
-        method: "PUT",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-  
-      if (response.status === 401) {
-        redirectOnTokenExpire();
-        throw new Error("Token expired");
-      }
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
-      return response.json();
-    } catch (error) {
-      console.error("Error in API call:", error);
-      throw error;
-    }
-  }
-
-
 export async function fetchRecordDetails(id) {
     const { accessToken } = isAuthenticated();
   
@@ -119,7 +90,36 @@ export async function fetchRecordDetails(id) {
     return response.json();
   }
 
+
+  //Documents upload section 
+
+  export async function incomeDocS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
   
+    try {
+      const response = await fetch(`${ENDPOINT}/sendincomeDocS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
 
   export async function feeReceiptS3Renewal(formData) {
     const { accessToken } = isAuthenticated();
@@ -149,3 +149,367 @@ export async function fetchRecordDetails(id) {
     }
   }
 
+  export async function hostelCertS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+  
+    try {
+      const response = await fetch(`${ENDPOINT}/sendHostelCertToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+
+  export async function alpabudharakCertS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+  
+    try {
+      const response = await fetch(`${ENDPOINT}/sendalpabudharakCertS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+
+  export async function declarationCertS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+  
+    try {
+      const response = await fetch(`${ENDPOINT}/sendDeclarationCertToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+
+  export async function registeredLabourCertS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+  
+    try {
+      const response = await fetch(`${ENDPOINT}/sendRegisteredLabourCertToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+  
+  export async function studentPanCardS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+  
+    try {
+      const response = await fetch(`${ENDPOINT}/sendStudentPanCardToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+
+  export async function fatherPanCardS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+  
+    try {
+      const response = await fetch(`${ENDPOINT}/sendFatherPanCardToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+
+  export async function fatherAadharCardS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+    
+    try {
+      const response = await fetch(`${ENDPOINT}/sendFatherAadharCardToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+
+  export async function casteValidityS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+    
+    try {
+      const response = await fetch(`${ENDPOINT}/sendCasteValidityToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+  
+  export async function allotmentLetterS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+    
+    try {
+      const response = await fetch(`${ENDPOINT}/sendAllotmentLetterToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+  
+  export async function leavingCertS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+    
+    try {
+      const response = await fetch(`${ENDPOINT}/sendLeavingCertToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+
+  export async function rationCardS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+    
+    try {
+      const response = await fetch(`${ENDPOINT}/sendRationCardToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+
+  
+  export async function previousYearMarksheetS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+    
+    try {
+      const response = await fetch(`${ENDPOINT}/sendPreviousYearMarksheetToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
+
+  export async function gapCertS3Renewal(formData) {
+    const { accessToken } = isAuthenticated();
+    
+    try {
+      const response = await fetch(`${ENDPOINT}/sendGapCertToS3Renewal`, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (response.status === 401) {
+        redirectOnTokenExpire();
+        throw new Error("Token expired");
+      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error("Error in API call:", error);
+      throw error;
+    }
+  }
