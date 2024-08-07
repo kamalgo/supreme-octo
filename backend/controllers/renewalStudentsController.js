@@ -116,7 +116,7 @@ exports.getallRenewalStudents = async (req, res) => {
   try {
     const freshprofiles = await MahadbtRenwalprofiles.findAll({
       where: {
-        Mahadbt_Username: {
+        candidateName: {
           [Op.like]: `%${searchQuery}%`,
         },
       },
@@ -1112,3 +1112,4 @@ exports.sendGapCertToS3Renewal = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+

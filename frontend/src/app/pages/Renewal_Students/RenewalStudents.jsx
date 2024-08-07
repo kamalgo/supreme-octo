@@ -354,6 +354,8 @@
 
 // export default RenewalStudents;
 
+
+
 import React, { useState, useEffect } from "react";
 import { Table, Input, Button, Modal, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
@@ -376,34 +378,44 @@ const RenewalStudents = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [recordDetails, setRecordDetails] = useState(null);
 
-  const fetchData = async (query = "") => {
-    try {
-      const response = await RenewalStudentApi(query);
-      setData(response.data); // Adjust according to your API response structure
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const handleSearch = (value) => {
     setSearchText(value);
     fetchData(value);
   };
+  
+
+  const fetchData = async (query = "") => {
+    try {
+      const response = await RenewalStudentApi(query);
+      // Adjust if your API returns data differently
+      setData(response.data || []); 
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
+
+  useEffect(() => {
+    fetchData().then(() => {
+      console.log("Data fetched successfully");
+    }).catch(error => {
+      console.error("Error in useEffect:", error);
+    });
+  }, []);
+  
 
   const handleUploadDocuments = async (record) => {
     setSelectedRecord(record);
     try {
-      const response = await fetchRecordDetails(record.id); // Fetch record details from the database
-      setRecordDetails(response.data); // Adjust according to your API response structure
+      const response = await fetchRecordDetails(record.id);
+      console.log("Record Details:", response.data);
+      setRecordDetails(response.data);
       setIsModalVisible(true);
     } catch (error) {
       console.error("Error fetching record details:", error);
     }
   };
+  
 
   const handleModalOk = () => {
     setIsModalVisible(false);

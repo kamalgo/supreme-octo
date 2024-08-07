@@ -3,29 +3,30 @@ import { redirectOnTokenExpire } from "../Auth";
 
 const ENDPOINT = import.meta.env.VITE_BACKEND_ENDPOINT;
 
-export async function RenewalStudentApi() {
-    const { accessToken } = isAuthenticated();
+// export async function RenewalStudentApi() {
+//     const { accessToken } = isAuthenticated();
   
-    const response = await fetch(`${ENDPOINT}/getallRenewalStudents`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: accessToken,
-      },
-    });
+//     const response = await fetch(`${ENDPOINT}/getallRenewalStudents`, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Accept: "application/json",
+//         Authorization: accessToken,
+//       },
+//     });
   
-    if (response.status == 401) {
-      redirectOnTokenExpire();
-    }
+//     if (response.status == 401) {
+//       redirectOnTokenExpire();
+//     }
   
-    return response.json();
-  }
+//     return response.json();
+//   }
 
-export async function fetchRecordDetails(id) {
-    const { accessToken } = isAuthenticated();
-  
-    const response = await fetch(`${ENDPOINT}/getRenewalStudentDetails/${id}`, {
+export async function RenewalStudentApi(searchQuery = "") {
+  const { accessToken } = isAuthenticated();
+
+  try {
+    const response = await fetch(`${ENDPOINT}/getallRenewalStudents?q=${searchQuery}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -33,18 +34,84 @@ export async function fetchRecordDetails(id) {
         Authorization: accessToken,
       },
     });
-  
-    if (response.status === 401) {
+
+    if (response.status == 401) {
       redirectOnTokenExpire();
       throw new Error("Token expired");
     }
-  
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-  
-    return response.json();
+
+    const data = await response.json();
+    console.log("Response Data:", data); // Print the response data
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching renewal students:", error);
+    throw error;
   }
+}
+
+
+// export async function fetchRecordDetails(id) {
+//     const { accessToken } = isAuthenticated();
+  
+//     const response = await fetch(`${ENDPOINT}/getRenewalStudentDetails/${id}`, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Accept: "application/json",
+//         Authorization: accessToken,
+//       },
+//     });
+  
+//     if (response.status === 401) {
+//       redirectOnTokenExpire();
+//       throw new Error("Token expired");
+//     }
+  
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+  
+//     return response.json();
+//   }
+
+
+export async function fetchRecordDetails(id) {
+  const { accessToken } = isAuthenticated();
+
+  try {
+      const response = await fetch(`${ENDPOINT}/getRenewalStudentDetails/${id}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: accessToken,
+          },
+      });
+
+      if (response.status === 401) {
+          redirectOnTokenExpire();
+          throw new Error("Token expired");
+      }
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Record Details Response:", data); // Print the response data
+      
+      return data;
+  } catch (error) {
+      console.error("Error fetching record details:", error);
+      throw error;
+  }
+}
+
 
   
   export async function renewalStudentProfileView(data) {
