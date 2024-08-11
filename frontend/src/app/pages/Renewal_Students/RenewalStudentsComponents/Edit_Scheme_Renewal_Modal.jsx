@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -15,7 +15,7 @@ import {
   VStack
 } from "@chakra-ui/react";
 
-import { editRenewalStudentApi } from '../../../api/RenewalStudentsApi/RenewalStudentsApi';
+import { editRenewalStudentApi, fetchRecordDetails } from '../../../api/RenewalStudentsApi/RenewalStudentsApi';
 
 const Edit_Scheme_Renewal_Modal = ({ isOpen, onClose, id }) => {
   const toast = useToast();
@@ -27,6 +27,38 @@ const Edit_Scheme_Renewal_Modal = ({ isOpen, onClose, id }) => {
     isRegisteredLabour: '',
     admittedUnderEws: ''
   });
+
+  // Fetch scheme details when modal opens or id changes
+  useEffect(() => {
+    if (isOpen && id) {
+      const fetchData = async () => {
+        try {
+          const response = await fetchRecordDetails(id);
+          if (response.success) {
+            setFormData(response.data);
+          } else {
+            toast({
+              title: "Error",
+              description: response.message || "Failed to fetch scheme details.",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching scheme details:", error);
+          toast({
+            title: "Error",
+            description: "An error occurred while fetching scheme details.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      };
+      fetchData();
+    }
+  }, [isOpen, id, toast]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,19 +75,29 @@ const Edit_Scheme_Renewal_Modal = ({ isOpen, onClose, id }) => {
         id,
         ...formData
       };
-      await editRenewalStudentApi(payload);
-      toast({
-        title: "Scheme details updated.",
-        description: "The scheme details have been successfully updated.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-      onClose(); // Close the modal after successful submission
+      const response = await editRenewalStudentApi(payload);
+      if (response.success) {
+        toast({
+          title: "Scheme details updated.",
+          description: response.message || "The scheme details have been successfully updated.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        onClose(); // Close the modal after successful submission
+      } else {
+        toast({
+          title: "Error",
+          description: response.message || "Unable to update scheme details.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       toast({
-        title: "An error occurred.",
-        description: "Unable to update scheme details.",
+        title: "Error",
+        description: "An error occurred while updating scheme details.",
         status: "error",
         duration: 5000,
         isClosable: true,
