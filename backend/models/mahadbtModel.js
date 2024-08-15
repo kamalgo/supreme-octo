@@ -2339,6 +2339,4 @@ const Mahadbtprofiles = sequelize.define("mahadbt_profiles", {
 //   allowNull: true,
 // },
 
-
-
 module.exports = Mahadbtprofiles;

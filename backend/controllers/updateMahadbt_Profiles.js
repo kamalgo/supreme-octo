@@ -41,7 +41,7 @@ const MahadbtRenewal = require ("../models/mahadbtRenewalModel")
       })
         .then((result) => {
           console.log("result", result);
-          console.log("email", req.body.id);
+          console.log("email", req.body.email);
           
           // The result is an array where the first element is the number of updated rows
           return res.status(200).json({
@@ -123,7 +123,7 @@ const MahadbtRenewal = require ("../models/mahadbtRenewalModel")
           const { email } = req.body;
       
           // Create a new record in the Mahadbtprofiles table
-          const newProfile = await MahadbtRenewal.create({
+          const newProfile = await Mahadbtprofiles.create({
             email : email           
           });
       

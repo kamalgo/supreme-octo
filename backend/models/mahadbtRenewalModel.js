@@ -12,6 +12,11 @@ const RenewalMahadbt = sequelize.define('RenewalMahadbt', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    Mahadbt_Password: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'mahadbt_password',
+    },
     candidateName: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -36,8 +41,13 @@ const RenewalMahadbt = sequelize.define('RenewalMahadbt', {
         type: DataTypes.STRING,
         allowNull: true,
         field: 'Refrence_ID',
+    },  
+    aadhar_number: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'Candidate_Adhar_Number',
     },    
-
+    
     //income section
     annualIncome: {
         type: DataTypes.STRING,
@@ -211,7 +221,7 @@ const RenewalMahadbt = sequelize.define('RenewalMahadbt', {
     hostelAdmissionDate: {
         type: DataTypes.STRING,
         allowNull: true,
-        field: 'Admission_Date',
+        field: 'Admission_Date_Hostel',
     },
     isMessAvailable: {
         type: DataTypes.STRING,

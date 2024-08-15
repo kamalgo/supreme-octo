@@ -17,6 +17,9 @@
   const collegeprofile = require("../models/collegeModel");
   const Mahadbtprofiles = require("../models/mahadbtModel");
 
+  const MahadbtRenwalprofiles = require("../models/mahadbtRenewalModel")
+
+
   const { validationResult } = require("express-validator");
   const { createHmac } = require("crypto");
 
@@ -2661,6 +2664,68 @@ exports.sendPreviousYearMarksheetToS3 = async (req, res) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+exports.sendFeeReceiptToS3Bot = async (req, res) => {
+  try {
+    const file = req.files.feereceipt;
+    const uploadParams = {
+      Bucket: "mahadbtdocs",
+      Key: `${req.body.email}/feereceipt/${file.name}`,
+      Body: file.data,
+    };
+
+    const listParams = {
+      Bucket: "mahadbtdocs",
+      Prefix: `${req.body.email}/feereceipt/`,
+    };
+
+    // List all objects in the folder
+    const listResponse = await s3.send(new ListObjectsV2Command(listParams));
+
+    // Extract keys of objects in the folder
+    const keys = listResponse?.Contents?.map((object) => ({ Key: object.Key }));
+
+    if (keys?.length > 0) {
+      // Create a command to delete the objects
+      const deleteParams = {
+        Bucket: "mahadbtdocs",
+        Delete: {
+          Objects: keys,
+          Quiet: false, // Set to true to suppress successful delete responses
+        },
+      };
+      // Send the delete command to S3
+      const deleteResponse = await s3.send(new DeleteObjectsCommand(deleteParams));
+      console.log("Objects in the folder deleted successfully:", deleteResponse.Deleted);
+    }
+
+    const data = await s3.send(new PutObjectCommand(uploadParams));
+
+    // Construct the URL of the uploaded object manually
+    const objectUrl = `https://${uploadParams.Bucket}.s3.${AWS.config.region}.amazonaws.com/${uploadParams.Key}`;
+
+    const updatedDataOfMain = {
+      feeReceiptDoc: objectUrl,
+    };
+    console.log("updatedDataOfMain", updatedDataOfMain);
+
+    // Update database entry
+    await MahadbtRenwalprofiles.update(updatedDataOfMain, {
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `${objectUrl} file(s) uploaded to S3 and database entry updated successfully.`,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
