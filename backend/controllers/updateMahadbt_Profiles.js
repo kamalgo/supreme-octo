@@ -4,9 +4,9 @@
 
 const { Sequelize, Op } = require("sequelize");
 const Mahadbtprofiles = require("../models/mahadbtModel");
-const mahadbtProfilesBot = require("../models/mahadbtModel_Bot")
-const MahadbtRenewal = require ("../models/mahadbtRenewalModel")
-
+const mahadbtProfilesBot = require("../models/mahadbtModel_Bot");
+const MahadbtRenewal = require("../models/mahadbtRenewalModel");
+const shravani_allcolumns = require("../models/shravaniAllColumnsModel");
 
 //UPTE update profile through email
     // exports.UPTE = async (req, res) => {
@@ -58,16 +58,39 @@ const MahadbtRenewal = require ("../models/mahadbtRenewalModel")
 
 //UPTA update profile through aadhar
 
+      // exports.UPTA = async (req, res) => {
+      //   Mahadbtprofiles.update(req.body, {
+      //     // Specify the condition for the update
+      //     where: {
+      //       aadhaar: req.body.aadhaar,
+      //     },
+      //   })
+      //     .then((result) => {
+      //       console.log("result", result);
+      //       console.log("aadhaar", req.body.aadhaar);
+            
+      //       // The result is an array where the first element is the number of updated rows
+      //       return res.status(200).json({
+      //         success: true,
+      //         message: `${result[0]} row(s) updated`,
+      //       });
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error updating records:", error);
+      //       res.status(500).json({ error: "Internal Server Error" });
+      //     });
+      // };
+
       exports.UPTA = async (req, res) => {
-        Mahadbtprofiles.update(req.body, {
+        shravani_allcolumns.update(req.body, {
           // Specify the condition for the update
           where: {
-            aadhaar: req.body.aadhaar,
+            aadhaar_number: req.body.aadhaar_number,
           },
         })
           .then((result) => {
             console.log("result", result);
-            console.log("aadhaar", req.body.aadhaar);
+            console.log("aadhaar", req.body.aadhaar_number);
             
             // The result is an array where the first element is the number of updated rows
             return res.status(200).json({
@@ -120,11 +143,11 @@ const MahadbtRenewal = require ("../models/mahadbtRenewalModel")
         try {
           // Extract data from req.body or wherever your data comes from
           // const { aadhaar, name, aadhaar_link_mob_no, email } = req.body;
-          const { email } = req.body;
+          const { aadhaar_number } = req.body;
       
           // Create a new record in the Mahadbtprofiles table
-          const newProfile = await Mahadbtprofiles.create({
-            email : email           
+          const newProfile = await shravani_allcolumns.create({
+            aadhaar_number : aadhaar_number           
           });
       
           // Handle success
