@@ -106,39 +106,6 @@ const shravani_allcolumns = require("../models/shravaniAllColumnsModel");
 
       /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      //insert query for mahadbt_profiles
-
-      // exports.createProfileBot = async (req, res) => {
-      //   try {
-      //     // Extract data from req.body or wherever your data comes from
-      //     // const { aadhaar, name, aadhaar_link_mob_no, email } = req.body;
-      //     const { aadhaar, name, aadhaar_link_mob_no, email } = req.body;
-      
-      //     // Create a new record in the Mahadbtprofiles table
-      //     const newProfile = await mahadbtProfilesBot.create({
-      //       aadhaar,
-      //       cand : name,
-      //       email,
-      //       aadhaarlinkmobno : aadhaar_link_mob_no,
-  
-      //     });
-      
-      //     // Handle success
-      //     return res.status(200).json({
-      //       success: true,
-      //       message: 'Profile created successfully',
-      //       data: newProfile  // Optionally return the created record
-      //     });
-      //   } catch (error) {
-      //     // Handle error
-      //     console.error('Error creating profile:', error);
-      //     return res.status(500).json({
-      //       success: false,
-      //       error: 'Internal Server Error'
-      //     });
-      //   }
-      // };
-
       exports.createProfileBot = async (req, res) => {
         try {
           // Extract data from req.body or wherever your data comes from
@@ -165,6 +132,34 @@ const shravani_allcolumns = require("../models/shravaniAllColumnsModel");
           });
         }
       };
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+exports.createProfileBotRenewal = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Create a new record in the Mahadbtprofiles table
+    const newProfile = await MahadbtRenewal.create({
+      email : email           
+    });
+
+    // Handle success
+    return res.status(200).json({
+      success: true,
+      message: 'Profile created successfully',
+      data: newProfile  // Optionally return the created record
+    });
+  } catch (error) {
+    // Handle error
+    console.error('Error creating profile:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Internal Server Error'
+    });
+  }
+};
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
