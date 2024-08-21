@@ -162,14 +162,41 @@
 //   }
 // };
 
+// exports.getAllRenewalStudentsForPageLoad = async (req, res) => {
+//   const referenceId = req.body.referenceId; // Get referenceId from request
+
+//   try {
+//     let whereClause = {}; // Initialize an empty where clause
+
+//     // If referenceId is provided, add it to the where clause
+//     if (referenceId) {
+//       whereClause.referenceId = referenceId;
+//     }
+
+//     // Fetch profiles based on the where clause
+//     const renewalProfiles = await MahadbtRenwalprofiles.findAll({
+//       where: whereClause,
+//     });
+
+//     return res.status(200).json({
+//       success: true,
+//       data: renewalProfiles,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching profiles:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+
 exports.getAllRenewalStudentsForPageLoad = async (req, res) => {
   const referenceId = req.body.referenceId; // Get referenceId from request
 
   try {
     let whereClause = {}; // Initialize an empty where clause
 
-    // If referenceId is provided, add it to the where clause
-    if (referenceId) {
+    // If referenceId is provided and it's not 'FORSTU', add it to the where clause
+    if (referenceId && referenceId !== 'FORSTU') {
       whereClause.referenceId = referenceId;
     }
 
