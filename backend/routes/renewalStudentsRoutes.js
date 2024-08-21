@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const{getallRenewalStudents, getRenewalStudentDetails, getSingleMahadbtRenewalProfile, updateMahadbtRenewalProfile
+const{getAllRenewalStudentsForPageLoad, searchRenewalStudents , getallRenewalStudents, getRenewalStudentDetails, getSingleMahadbtRenewalProfile, updateMahadbtRenewalProfile
      , sendincomeDocS3Renewal, sendfeeReceiptS3Renewal, sendHostelCertToS3Renewal, sendalpabudharakCertS3Renewal,
      sendDeclarationCertToS3Renewal, sendRegisteredLabourCertToS3Renewal, sendStudentPanCardToS3Renewal,
      sendFatherPanCardToS3Renewal, sendFatherAadharCardToS3Renewal, sendCasteValidityToS3Renewal, sendAllotmentLetterToS3Renewal,
@@ -9,7 +9,9 @@ const{getallRenewalStudents, getRenewalStudentDetails, getSingleMahadbtRenewalPr
      sendGapCertToS3Renewal
      } = require("../controllers/renewalStudentsController");
 
-router.get("/getallRenewalStudents",getallRenewalStudents);
+router.post("/getallRenewalStudents",getAllRenewalStudentsForPageLoad);
+router.post('/searchRenewalStudents', searchRenewalStudents);
+
 router.get("/getRenewalStudentDetails/:id", getRenewalStudentDetails);
 router.post("/getSingleMahadbtRenewalProfile", getSingleMahadbtRenewalProfile);
 router.put("/updateMahadbtRenewalProfile", updateMahadbtRenewalProfile);

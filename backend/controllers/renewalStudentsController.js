@@ -110,26 +110,126 @@
       });
   };
 
-exports.getallRenewalStudents = async (req, res) => {
-  const searchQuery = req.query.q || ""; // Get search query from request
+// exports.getallRenewalStudents = async (req, res) => {
+//   const searchQuery = req.query.q || ""; // Get search query from request
+
+//   try {
+//     const freshprofiles = await MahadbtRenwalprofiles.findAll({
+//       where: {
+//         candidateName: {
+//           [Op.like]: `%${searchQuery}%`,
+//         },
+//       },
+//     });
+//     return res.status(200).json({
+//       success: true,
+//       data: freshprofiles,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching profiles:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+// exports.getallRenewalStudents = async (req, res) => {
+//   const searchQuery = req.query.q || ""; // Get search query from request
+//   const referenceId = req.body.referenceId; // Get referenceId from request (optional)
+
+//   try {
+//     // Create a dynamic where clause based on searchQuery and optional referenceId
+//     const whereClause = {
+//       candidateName: {
+//         [Op.like]: `%${searchQuery}%`,
+//       },
+//     };
+
+//     // If referenceId is provided, add it to the where clause
+//     if (referenceId) {
+//       whereClause.referenceId = referenceId;
+//     }
+
+//     const renewalProfiles = await MahadbtRenwalprofiles.findAll({
+//       where: whereClause,
+//     });
+
+//     return res.status(200).json({
+//       success: true,
+//       data: renewalProfiles,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching profiles:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+exports.getAllRenewalStudentsForPageLoad = async (req, res) => {
+  const referenceId = req.body.referenceId; // Get referenceId from request
 
   try {
-    const freshprofiles = await MahadbtRenwalprofiles.findAll({
-      where: {
-        candidateName: {
-          [Op.like]: `%${searchQuery}%`,
-        },
-      },
+    let whereClause = {}; // Initialize an empty where clause
+
+    // If referenceId is provided, add it to the where clause
+    if (referenceId) {
+      whereClause.referenceId = referenceId;
+    }
+
+    // Fetch profiles based on the where clause
+    const renewalProfiles = await MahadbtRenwalprofiles.findAll({
+      where: whereClause,
     });
+
     return res.status(200).json({
       success: true,
-      data: freshprofiles,
+      data: renewalProfiles,
     });
   } catch (error) {
     console.error("Error fetching profiles:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+
+
+
+exports.searchRenewalStudents = async (req, res) => {
+  const searchQuery = req.body.query || ""; // Get search query from request
+  const referenceId = req.body.referenceId; // Get referenceId from request (optional)
+
+  console.log("Received query:", searchQuery);
+  console.log("Received referenceId:", referenceId);
+
+  try {
+    // Create a dynamic where clause based on searchQuery
+    const whereClause = {
+      candidateName: {
+        [Op.like]: `%${searchQuery}%`,
+      },
+    };
+
+    // If referenceId is provided, add it to the where clause
+    if (referenceId) {
+      whereClause.referenceId = referenceId;
+    }
+
+    const renewalProfiles = await MahadbtRenwalprofiles.findAll({
+      where: whereClause,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: renewalProfiles,
+    });
+  } catch (error) {
+    console.error("Error fetching profiles:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+
+
 
 exports.getRenewalStudentDetails = async (req, res) => {
   const studentId = req.params.id;
