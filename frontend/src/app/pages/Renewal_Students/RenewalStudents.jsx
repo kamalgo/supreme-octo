@@ -355,17 +355,16 @@
 // export default RenewalStudents;
 
 
-
+import { NavLink } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import { Table, Input, Button, Modal, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { NavLink } from 'react-router-dom';
 import Base from "../../components/Base";
 import {
-  RenewalStudentApi, fetchRecordDetails,
+  getAllRenewalStudentsForPageLoad, getRenewalStudentsBySearch, RenewalStudentApi, fetchRecordDetails,
   incomeDocS3Renewal, feeReceiptS3Renewal, hostelCertS3Renewal, alpabudharakCertS3Renewal,
   declarationCertS3Renewal, registeredLabourCertS3Renewal, studentPanCardS3Renewal, fatherPanCardS3Renewal,
-  fatherAadharCardS3Renewal, casteValidityS3Renewal, allotmentLetterS3Renewal,leavingCertS3Renewal,
+  fatherAadharCardS3Renewal, casteValidityS3Renewal, allotmentLetterS3Renewal, leavingCertS3Renewal,
   rationCardS3Renewal, previousYearMarksheetS3Renewal, gapCertS3Renewal
 } from "../../api/RenewalStudentsApi/RenewalStudentsApi";
 
@@ -377,32 +376,41 @@ const RenewalStudents = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [recordDetails, setRecordDetails] = useState(null);
-
-  const handleSearch = (value) => {
-    setSearchText(value);
-    fetchData(value);
-  };
-  
-
-  const fetchData = async (query = "") => {
-    try {
-      const response = await RenewalStudentApi(query);
-      // Adjust if your API returns data differently
-      setData(response.data || []); 
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  
+  const [referid, setReferid] = useState(null);
 
   useEffect(() => {
-    fetchData().then(() => {
-      console.log("Data fetched successfully");
-    }).catch(error => {
-      console.error("Error in useEffect:", error);
-    });
+    const userData = JSON.parse(localStorage.getItem('forstu'));
+    if (userData && userData.user && userData.user.ref_code) {
+      setReferid(userData.user.ref_code);
+    }
   }, []);
-  
+
+  useEffect(() => {
+    if (referid) {
+      loadInitialData(referid);
+    }
+  }, [referid]);
+
+  const loadInitialData = async (refId) => {
+    try {
+      const response = await getAllRenewalStudentsForPageLoad(refId);
+      setData(response.data || []);
+    } catch (error) {
+      console.error("Error loading initial data:", error);
+    }
+  };
+
+  const handleSearch = async (value) => {
+    setSearchText(value);
+    try {
+      const response = await getRenewalStudentsBySearch(value, referid);
+      setData(response.data || []);
+    } catch (error) {
+      console.error("Error performing search:", error);
+    }
+  };
+
+
 
   const handleUploadDocuments = async (record) => {
     setSelectedRecord(record);
@@ -516,9 +524,9 @@ const RenewalStudents = () => {
       key: "candidateName",
     },
     {
-      title: "Gender",
-      dataIndex: "gender",
-      key: "gender",
+      title: "Ref Code",
+      dataIndex: "referenceId",
+      key: "referenceId",
     },
     {
       title: 'Actions',

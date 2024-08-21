@@ -22,20 +22,58 @@ const ENDPOINT = import.meta.env.VITE_BACKEND_ENDPOINT;
 //     return response.json();
 //   }
 
-export async function RenewalStudentApi(searchQuery = "") {
+
+
+// export async function RenewalStudentApi(searchQuery = "") {
+//   const { accessToken } = isAuthenticated();
+
+//   try {
+//     const response = await fetch(`${ENDPOINT}/getallRenewalStudents?q=${searchQuery}`, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Accept: "application/json",
+//         Authorization: accessToken,
+//       },
+//     });
+
+//     if (response.status == 401) {
+//       redirectOnTokenExpire();
+//       throw new Error("Token expired");
+//     }
+
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+
+//     const data = await response.json();
+//     console.log("Response Data:", data); // Print the response data
+
+//     return data;
+//   } catch (error) {
+//     console.error("Error fetching renewal students:", error);
+//     throw error;
+//   }
+// }
+
+
+export async function RenewalStudentApi(referenceId = "") {
   const { accessToken } = isAuthenticated();
 
   try {
-    const response = await fetch(`${ENDPOINT}/getallRenewalStudents?q=${searchQuery}`, {
-      method: "GET",
+    const response = await fetch(`${ENDPOINT}/getallRenewalStudents`, {
+      method: "POST",  // Use POST method to send data in the body
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: accessToken,
       },
+      body: JSON.stringify({
+        referenceId: referenceId,  // Send referenceId in the request body
+      }),
     });
 
-    if (response.status == 401) {
+    if (response.status === 401) {
       redirectOnTokenExpire();
       throw new Error("Token expired");
     }
@@ -50,6 +88,74 @@ export async function RenewalStudentApi(searchQuery = "") {
     return data;
   } catch (error) {
     console.error("Error fetching renewal students:", error);
+    throw error;
+  }
+}
+
+
+export async function getAllRenewalStudentsForPageLoad(referenceId = "") {
+  const { accessToken } = isAuthenticated();
+
+  try {
+    const response = await fetch(`${ENDPOINT}/getallRenewalStudents`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({ referenceId }),
+    });
+
+    if (response.status === 401) {
+      redirectOnTokenExpire();
+      throw new Error("Token expired");
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("All Renewal Students Data:", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching all renewal students:", error);
+    throw error;
+  }
+}
+
+// Function to search renewal students by query
+export async function getRenewalStudentsBySearch(query, referenceId = "") {
+  const { accessToken } = isAuthenticated();
+  console.log("on the train", query, referenceId);
+  try {
+    const response = await fetch(`${ENDPOINT}/searchRenewalStudents`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({ query, referenceId }),
+    });
+
+    if (response.status === 401) {
+      redirectOnTokenExpire();
+      throw new Error("Token expired");
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Search Results:", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching search results:", error);
     throw error;
   }
 }
