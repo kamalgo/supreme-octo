@@ -1240,3 +1240,35 @@ exports.sendGapCertToS3Renewal = async (req, res) => {
   }
 };
 
+
+
+exports.personalInfo = (req, res) => {
+  const { id, personalInfo_verified } = req.body; // Extract personalInfo_verified from the request body
+  const updatedData = { personalInfo_verified }; // Prepare data for update
+
+  MahadbtRenwalprofiles.update(updatedData, {
+    where: {
+      id: id,
+    },
+  })
+    .then((num) => {
+      if (num == 1) {
+        res.json({
+          success: true,
+          message: "Mahadbt Renewal Profile was updated successfully.",
+        });
+      } else {
+        res.json({
+          success: false,
+          message: `Cannot update Mahadbt Renewal Profile with id=${id}. Maybe the profile was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error updating Mahadbt Renewal Profile with id=${id}`,
+        error: error,
+      });
+    });
+};

@@ -1,78 +1,66 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom';
-import { useLocation } from "react-router-dom";
-import Base from "../../../components/Base";
-import { studentprofileviewApi } from "../../../api/Student/StudentApis";
-import { Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Box, Heading, SimpleGrid, Link, Text } from "@chakra-ui/react";
+import { useParams, Link } from 'react-router-dom';
 import { ExternalLinkIcon } from "@chakra-ui/icons"; // Import ExternalLinkIcon from Chakra UI
-import { renewalStudentProfileView } from "../../../api/RenewalStudentsApi/RenewalStudentsApi";
+import { Box, Heading, SimpleGrid, Text, Button, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from "@chakra-ui/react";
+import Base from "../../../components/Base";
+import { renewalStudentProfileView, updatePersonalInfo } from "../../../api/RenewalStudentsApi/RenewalStudentsApi";
 import Edit_Prsnl_Renewal_Modal from "./Edit_Prsnl_Renewal_Modal";
 import Edit_Income_Renewal_Modal from "./Edit_Income_Renewal_Modal";
-import Edit_Current_Course_Renewal_Modal from "./Edit_Current_Course_Renewal_Modal"
-import Edit_Hostel_Renewal_Modal from "./Edit_Hostel_Renewal_Modal"
-import Edit_Scheme_Renewal_Modal from "./Edit_Scheme_Renewal_Modal"
+import Edit_Current_Course_Renewal_Modal from "./Edit_Current_Course_Renewal_Modal";
+import Edit_Hostel_Renewal_Modal from "./Edit_Hostel_Renewal_Modal";
+import Edit_Scheme_Renewal_Modal from "./Edit_Scheme_Renewal_Modal";
 
 function viewRenewalStudents() {
-  
-
-  //modal for edit personal 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
+  const [isVerified, setIsVerified] = useState(false);
   const [viewData, setViewData] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false);
   const [isCurrentCourseModalOpen, setIsCurrentCourseModalOpen] = useState(false);
   const [isHostelModalOpen, setIsHostelModalOpen] = useState(false);
   const [isSchemeModalOpen, setIsSchemeModalOpen] = useState(false);
 
-
-  
-  //modal for upload
-  const [isModalOpenUpload,setisModalOpenUpload] = useState(false);
-
-
-  // const location = useLocation();
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
   const { id } = useParams();
-  console.log("my id", id);
-
-//   console.log(location.state?.id);
-  
-//   if (!location.state?.id) {
-//     return <div>No data</div>;
-//   }
-
-  const getprofileviewFunction = () => {
-    console.log("getprofileviewFunction called!!!");
-    let data = {
-      id: id,
-    };
-    renewalStudentProfileView(data)
-      .then((res) => {
-        console.log("Student profile view data:", res.data);
-        setViewData(res.data);
-      })
-      .catch((err) => {
-        console.log("Error fetching student profile view data:", err);
-      });
-  };
 
   useEffect(() => {
-    getprofileviewFunction();
-  }, []);
+    const fetchProfileData = async () => {
+      try {
+        const data = { id };
+        const response = await renewalStudentProfileView(data);
+        setViewData(response.data);
+        setIsVerified(response.data.personalInfo_verified === 'yes');
+      } catch (err) {
+        console.error("Error fetching student profile view data:", err);
+      }
+    };
 
-  console.log("viewData", viewData.admissionType);
+    fetchProfileData();
+  }, [id]);
+
+  const handleVerifyClick = (e) => {
+    e.stopPropagation();
+    onOpen();
+  };
+
+  const confirmVerification = async () => {
+    try {
+      const response = await updatePersonalInfo(id, 'yes');
+      if (response.success) {
+        setIsVerified(true);
+      }
+    } catch (err) {
+      console.error("Error updating verification status:", err);
+    } finally {
+      onClose();
+    }
+  };
 
   const openModalWithId = () => {
     setSelectedId(id);
     setIsModalOpen(true);
   };
-
-  const handlesetisModalOpenUpload = () => {
-    console.log("intel inside");
-    setisModalOpenUpload(true);
-  };
-
-  console.log("Selected ID:", id);
 
   const openIncomeModalWithId = () => {
     setSelectedId(id);
@@ -93,9 +81,6 @@ function viewRenewalStudents() {
     setSelectedId(id);
     setIsSchemeModalOpen(true);
   };
-  
-  
-
 
   return (
     <div>
@@ -103,60 +88,47 @@ function viewRenewalStudents() {
         <Accordion defaultIndex={[0]} allowMultiple>
           <AccordionItem>
             <h2>
-            <AccordionButton sx={{ backgroundColor: 'blue.900', color: 'white' }}>
+              <AccordionButton sx={{ backgroundColor: 'blue.900', color: 'white' }}>
                 <Box as="span" flex="1" textAlign="left">
                   <Heading as="h2" size="md" p={"20px"}>
                     Personal Information
                   </Heading>
                 </Box>
-                <button
-  style={{
-    marginLeft: "auto",
-    padding: "5px 10px",
-    fontSize: "14px",
-    backgroundColor: "#3182CE",
-    color: "white",
-    border: "none",
-    cursor: "pointer",
-    borderRadius: "4px",
-    zIndex: 2,
-  }}
-  onClick={(e) => {
-    e.stopPropagation();
-    openModalWithId();
-  }}
->
+                <Button
+                  ml="auto"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openModalWithId();
+                  }}
+                  colorScheme="blue"
+                  size="sm"
+                >
                   Edit
-</button>
+                </Button>
 
+                <Button
+                  ml={2}
+                  colorScheme={isVerified ? "green" : "red"}
+                  size="sm"
+                  onClick={handleVerifyClick}
+                >
+                  {isVerified ? "Verified" : "Not Verified"}
+                </Button>
                 <AccordionIcon />
               </AccordionButton>
             </h2>
             <AccordionPanel pb={4}>
               <SimpleGrid columns={3} spacing={10}>
-                <Box
-                  display={"flex"}
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                  p={"10px"}
-                >
+                <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} p={"10px"}>
                   <Heading pr={2} as="h5" size="sm">
                     Candidate Name (As Per SSC Marksheet)
                   </Heading>
-
                   <Text fontSize="md">
-                    {viewData?.candidateName === null
-                      ? "NA"
-                      : viewData?.candidateName}
+                    {viewData?.candidateName === null ? "NA" : viewData?.candidateName}
                   </Text>
                 </Box>
 
-                <Box
-                  display={"flex"}
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                  p={"10px"}
-                >
+                <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} p={"10px"}>
                   <Heading pr={2} as="h5" size="sm">
                     Email
                   </Heading>
@@ -165,42 +137,55 @@ function viewRenewalStudents() {
                   </Text>
                 </Box>
 
-                <Box
-                  display={"flex"}
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                  p={"10px"}
-                >
+                <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} p={"10px"}>
                   <Heading pr={2} as="h5" size="sm">
                     Mobile (Student WhatsApp Number)
                   </Heading>
                   <Text fontSize="md">
-                    {viewData?.whatsappNumber === null
-                      ? "NA"
-                      : viewData?.whatsappNumber}
+                    {viewData?.whatsappNumber === null ? "NA" : viewData?.whatsappNumber}
                   </Text>
                 </Box>
 
-                <Box
-                  display={"flex"}
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                  p={"10px"}
-                >
+                <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} p={"10px"}>
                   <Heading pr={2} as="h5" size="sm">
                     College Ref Code
                   </Heading>
                   <Text fontSize="md">
-                    {viewData?.referenceId === null
-                      ? "NA"
-                      : viewData?.referenceId}
+                    {viewData?.referenceId === null ? "NA" : viewData?.referenceId}
                   </Text>
-                </Box>               
-
-
+                </Box>
               </SimpleGrid>
             </AccordionPanel>
           </AccordionItem>
+
+        {/* Verification Confirmation Dialog */}
+        <AlertDialog
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Confirm Verification
+              </AlertDialogHeader>
+
+              <AlertDialogBody>
+                Are you sure you want to verify this student?
+              </AlertDialogBody>
+
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={onClose}>
+                  No
+                </Button>
+                <Button colorScheme="green" onClick={confirmVerification} ml={3}>
+                  Yes
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+
 
           <AccordionItem>
             <h2>

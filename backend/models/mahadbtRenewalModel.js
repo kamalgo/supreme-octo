@@ -348,9 +348,72 @@ const RenewalMahadbt = sequelize.define('RenewalMahadbt', {
         field: 'Gap_Doc',
     },
 
+//Verified Section
+
+    personalInfo_verified: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'personalInfo_verified',
+    },
+    incomeDetails_verified: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'incomeDetails_verified',
+    },
+    currentCourse_verified: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'currentCourse_verified',
+    },
+    hostelDetails_verified: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'hostelDetails_verified',
+    },
+    schemeWise_verified: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'schemeWise_verified',
+    },
+
+    student_verified: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'student_verified',
+    },
+    // createdAt: {
+    //     type: DataTypes.DATE,
+    //     allowNull: true,
+    //     field: 'createdAt',
+    // },
+    // modifiedAt: {
+    //     type: DataTypes.DATE,
+    //     allowNull: true,
+    //     field: 'modifiedAt',
+    // },
+
+    PreviousYear_SchemeName_1: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'PreviousYear_SchemeName_1',
+    },
+
+    PreviousYear_SchemeName_2: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'PreviousYear_SchemeName_2',
+    },
+    Dept_Name: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'Dept_Name',
+    },
+
 }, {
     tableName: 'renewal_mahadbt',
-    timestamps: false
+    timestamps: true, // Automatically manages createdAt and updatedAt
+    createdAt: 'createdAt', // Maps createdAt to your column name
+    updatedAt: 'modifiedAt', // Maps updatedAt to your column name
 });
 
 module.exports = RenewalMahadbt;

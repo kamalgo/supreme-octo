@@ -3,6 +3,46 @@ import { redirectOnTokenExpire } from "../Auth";
 
 const ENDPOINT = import.meta.env.VITE_BACKEND_ENDPOINT;
 
+//verification section
+////////////////////////////////////////////////////
+// api/RenewalStudentsApi/RenewalStudentsApi.js
+export async function updatePersonalInfo(id, personalInfo_verified) {
+  const { accessToken } = isAuthenticated();
+
+  try {
+    const response = await fetch(`${ENDPOINT}/personalInfoVerified`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({
+        id: id,
+        personalInfo_verified: personalInfo_verified,
+      }),
+    });
+
+    if (response.status === 401) {
+      redirectOnTokenExpire();
+      throw new Error("Token expired");
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating personal info:", error);
+    throw error;
+  }
+}
+
+
+///////////////////////////////////////////////////
+
 // export async function RenewalStudentApi() {
 //     const { accessToken } = isAuthenticated();
   
