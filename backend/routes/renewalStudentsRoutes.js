@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const{personalInfo, getAllRenewalStudentsForPageLoad, searchRenewalStudents , getallRenewalStudents, getRenewalStudentDetails, getSingleMahadbtRenewalProfile, updateMahadbtRenewalProfile
+const{incomeDetails, personalInfo, getAllRenewalStudentsForPageLoad, searchRenewalStudents , getallRenewalStudents, getRenewalStudentDetails, getSingleMahadbtRenewalProfile, updateMahadbtRenewalProfile
      , sendincomeDocS3Renewal, sendfeeReceiptS3Renewal, sendHostelCertToS3Renewal, sendalpabudharakCertS3Renewal,
      sendDeclarationCertToS3Renewal, sendRegisteredLabourCertToS3Renewal, sendStudentPanCardToS3Renewal,
      sendFatherPanCardToS3Renewal, sendFatherAadharCardToS3Renewal, sendCasteValidityToS3Renewal, sendAllotmentLetterToS3Renewal,
@@ -11,6 +11,7 @@ const{personalInfo, getAllRenewalStudentsForPageLoad, searchRenewalStudents , ge
 
 //verified section 
 router.post("/personalInfoVerified",personalInfo);
+router.post("/incomeDetailsVerified",incomeDetails);
 
 
 router.post("/getallRenewalStudents",getAllRenewalStudentsForPageLoad);

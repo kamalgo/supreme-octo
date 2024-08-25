@@ -5,7 +5,6 @@ const ENDPOINT = import.meta.env.VITE_BACKEND_ENDPOINT;
 
 //verification section
 ////////////////////////////////////////////////////
-// api/RenewalStudentsApi/RenewalStudentsApi.js
 export async function updatePersonalInfo(id, personalInfo_verified) {
   const { accessToken } = isAuthenticated();
 
@@ -39,6 +38,41 @@ export async function updatePersonalInfo(id, personalInfo_verified) {
     throw error;
   }
 }
+
+export async function updateIncomeDetails(id, incomeDetails_verified) {
+  const { accessToken } = isAuthenticated();
+
+  try {
+    const response = await fetch(`${ENDPOINT}/incomeDetailsVerified`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({
+        id: id,
+        incomeDetails_verified: incomeDetails_verified,
+      }),
+    });
+
+    if (response.status === 401) {
+      redirectOnTokenExpire();
+      throw new Error("Token expired");
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating income details:", error);
+    throw error;
+  }
+}
+
 
 
 ///////////////////////////////////////////////////

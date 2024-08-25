@@ -9,6 +9,9 @@ let database = process.env.DEVELOPMENT_DB_NAME;
 let user = process.env.DEVELOPMENT_DB_USER;
 let password = process.env.DEVELOPMENT_DB_PASSWORD;
 
+let port = process.env.DEVELOPMENT_DB_PORT || 3308; // Default to 3308 if not set
+
+
 // dataaaa
 
 // if (process.env.NODE_ENV === "production") {
@@ -26,6 +29,9 @@ let password = process.env.DEVELOPMENT_DB_PASSWORD;
 
 const sequelize = new Sequelize(database, user, password, {
   host: host,
+
+  port: port, // Set the port to 3308, did these changes for private mysql 
+
   dialect: process.env.DB_DIALECT,
   logging: false,
   dialectOptions: {

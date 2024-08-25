@@ -1272,3 +1272,35 @@ exports.personalInfo = (req, res) => {
       });
     });
 };
+
+
+exports.incomeDetails = (req, res) => {
+  const { id, incomeDetails_verified } = req.body; // Extract incomeDetails_verified from the request body
+  const updatedData = { incomeDetails_verified }; // Prepare data for update
+
+  MahadbtRenwalprofiles.update(updatedData, {
+    where: {
+      id: id,
+    },
+  })
+    .then((num) => {
+      if (num == 1) {
+        res.json({
+          success: true,
+          message: "Mahadbt Renewal Profile income details were updated successfully.",
+        });
+      } else {
+        res.json({
+          success: false,
+          message: `Cannot update Mahadbt Renewal Profile income details with id=${id}. Maybe the profile was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error updating Mahadbt Renewal Profile income details with id=${id}`,
+        error: error,
+      });
+    });
+};
