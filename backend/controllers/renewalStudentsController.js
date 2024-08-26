@@ -1304,3 +1304,112 @@ exports.incomeDetails = (req, res) => {
       });
     });
 };
+
+
+exports.updateCurrentCourseDetails = (req, res) => {
+  const { id, currentCourse_verified } = req.body; // Extract currentCourse_verified from the request body
+  const updatedData = { currentCourse_verified }; // Prepare data for update
+
+  // Assuming MahadbtRenwalprofiles is your model and it has a method `update`
+  MahadbtRenwalprofiles.update(updatedData, {
+    where: {
+      id: id,
+    },
+  })
+    .then((num) => {
+      if (num == 1) {
+        res.json({
+          success: true,
+          message: "Mahadbt Renewal Profile current course details were updated successfully.",
+        });
+      } else {
+        res.json({
+          success: false,
+          message: `Cannot update Mahadbt Renewal Profile current course details with id=${id}. Maybe the profile was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error updating Mahadbt Renewal Profile current course details with id=${id}`,
+        error: error,
+      });
+    });
+};
+
+
+
+exports.updateHostelDetails = (req, res) => {
+  const { id, hostelDetails_verified } = req.body; // Extract hostel_verified from the request body
+  const updatedData = { hostelDetails_verified }; // Prepare data for update
+   
+  
+   console.log(updatedData)
+  // Assuming MahadbtRenwalprofiles is your model and it has a method `update`
+  MahadbtRenwalprofiles.update(updatedData, {
+    where: {
+      id: id,
+    },
+  })
+    .then((num) => {
+      if (num == 1) {
+        res.json({
+          success: true,
+          message: "Mahadbt Renewal Profile hostel details were updated successfully.",
+        });
+      } else {
+        res.json({
+          success: false,
+          message: `Cannot update Mahadbt Renewal Profile hostel details with id=${id}. Maybe the profile was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error updating Mahadbt Renewal Profile hostel details with id=${id}`,
+        error: error,
+      });
+    });
+};
+
+
+exports.updateSchemeDetails = (req, res) => {
+  const { id, schemeWise_verified } = req.body; // Extract scheme_verified from the request body
+
+  const updatedData = { schemeWise_verified }; // Prepare data for update
+  console.log(id, schemeWise_verified); // Debugging logs
+
+  MahadbtRenwalprofiles.update(updatedData, {
+    where: { id: id },
+  })
+    .then((result) => {
+      console.log('Update result:', result);
+      if (result[0] > 0) { // result[0] is the number of affected rows
+        res.json({
+          success: true,
+          message: "Mahadbt Renewal Profile scheme details were updated successfully.",
+        });
+      } else {
+        res.json({
+          success: false,
+          message: `Cannot update Mahadbt Renewal Profile scheme details with id=${id}. Maybe the profile was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((error) => {
+      console.error('Update error:', error);
+      res.status(500).json({
+        success: false,
+        message: `Error updating Mahadbt Renewal Profile scheme details with id=${id}`,
+        error: error.message,
+      });
+    });
+};
+
+
+
+
+
+

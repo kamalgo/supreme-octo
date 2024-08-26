@@ -3,34 +3,49 @@ import { useParams, Link } from 'react-router-dom';
 import { ExternalLinkIcon } from "@chakra-ui/icons"; // Import ExternalLinkIcon from Chakra UI
 import { Box, Heading, SimpleGrid, Text, Button, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from "@chakra-ui/react";
 import Base from "../../../components/Base";
-import { renewalStudentProfileView, updatePersonalInfo, updateIncomeDetails  } from "../../../api/RenewalStudentsApi/RenewalStudentsApi";
-import Edit_Prsnl_Renewal_Modal from "./Edit_Prsnl_Renewal_Modal";
+import { renewalStudentProfileView, updatePersonalInfo, updateIncomeDetails, updateCurrentCourseDetails, 
+         updateHostelDetails, updateSchemeDetails } from "../../../api/RenewalStudentsApi/RenewalStudentsApi";
+
+         import Edit_Prsnl_Renewal_Modal from "./Edit_Prsnl_Renewal_Modal";
 import Edit_Income_Renewal_Modal from "./Edit_Income_Renewal_Modal";
 import Edit_Current_Course_Renewal_Modal from "./Edit_Current_Course_Renewal_Modal";
 import Edit_Hostel_Renewal_Modal from "./Edit_Hostel_Renewal_Modal";
 import Edit_Scheme_Renewal_Modal from "./Edit_Scheme_Renewal_Modal";
 import PersonalInfoVerificationDialog from "./verificationDialogs/PersonalInfoVerificationDialog";
 import IncomeDetailsVerificationDialog from "./verificationDialogs/IncomeDetailsVerificationDialog";
-import CurrentCourseDialog  from "./verificationDialogs/CurrentCourseDialog"
+import CurrentCourseDialog  from "./verificationDialogs/CurrentCourseDialog";
+import HostelDialog from "./verificationDialogs/HostelDialog";
+import SchemeDialog from "./verificationDialogs/SchemeDialog";
  
+
 
 
 function viewRenewalStudents() {
   const [isVerified, setIsVerified] = useState(false);
   const [isIncomeVerified, setIsIncomeVerified] = useState(false);
   const [isCurrentCourseVerified, setIsCurrentCourseVerified] = useState(false);
+  const [isHostelVerified, setIsHostelVerified] = useState(false);
+  const [isSchemeVerified, setIsSchemeVerified] = useState(false);
 
+
+
+  //Modals for edit button
   const [viewData, setViewData] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false);
+  const [isCurrentCourseModalOpen, setIsCurrentCourseModalOpen] = useState(false);
+  const [isHostelModalOpen, setIsHostelModalOpen] = useState(false);
+  const [isSchemeModalOpen, setIsSchemeModalOpen] = useState(false);
 
 
 
-//Dialogs
+//Dialogs for verification button
   const [isPersonalDialogOpen, setIsPersonalDialogOpen] = useState(false); // State for personal info dialog
   const [isIncomeDialogOpen, setIsIncomeDialogOpen] = useState(false); // State for income dialog
   const [isCurrentCourseDialogOpen, setIsCurrentCourseDialogOpen] = useState(false);
+  const [isHostelDialogOpen , setIsHostelDialogOpen] = useState(false);
+  const [isSchemeDialogOpen, setIsSchemeDialogOpen] = useState(false);
 
 
   const { id } = useParams();
@@ -40,24 +55,41 @@ function viewRenewalStudents() {
       try {
         const data = { id };
         const response = await renewalStudentProfileView(data);
-        setViewData(response.data);
-        setIsVerified(response.data.personalInfo_verified === 'yes');
-        setIsIncomeVerified(response.data.incomeInfo_verified === 'yes');
-        setIsCurrentCourseVerified(response.data.currentCourse_verified === 'yes');
-
+        
+        // Ensure response is correctly set
+        if (response && response.data) {
+          setViewData(response.data);
+          setIsVerified(response.data.personalInfo_verified === 'yes');
+          setIsIncomeVerified(response.data.incomeDetails_verified  === 'yes');
+          setIsCurrentCourseVerified(response.data.currentCourse_verified === 'yes');
+          setIsHostelVerified(response.data.hostelDetails_verified === 'yes');
+          setIsSchemeVerified(response.data.scheme_verified === 'yes');
+        }
+  
       } catch (err) {
         console.error("Error fetching student profile view data:", err);
       }
     };
     fetchProfileData();
   }, [id]);
+  
 
   const handleVerifyClick = (e, section) => {
     e.stopPropagation();
     if (section === 'personal') {
       setIsPersonalDialogOpen(true);
+
     } else if (section === 'income') {
       setIsIncomeDialogOpen(true);
+
+    } else if (section === 'current'){
+      setIsCurrentCourseDialogOpen(true);
+    
+    } else if (section === 'hostel'){
+      setIsHostelDialogOpen(true); // Ensure this line is setting the state correctly
+
+    } else if (section == "scheme"){
+      setIsSchemeDialogOpen(true); 
     }
     
   };
@@ -75,11 +107,18 @@ function viewRenewalStudents() {
     }
   };
 
-  const confirmCurrentCourseVerification = async (verificationStatus) => {
+  const confirmIncomeVerification = async (verificationStatus) => {
     try {
       const response = await updateIncomeDetails(id, verificationStatus);
       if (response.success) {
         setIsIncomeVerified(verificationStatus === 'yes');
+  
+        // Optionally re-fetch the profile data to ensure it’s up-to-date
+        const updatedResponse = await renewalStudentProfileView({ id });
+        if (updatedResponse && updatedResponse.data) {
+          setViewData(updatedResponse.data);
+          setIsIncomeVerified(updatedResponse.data.incomeDetails_verified  === 'yes');
+        }
       }
     } catch (err) {
       console.error("Error updating income verification status:", err);
@@ -88,18 +127,54 @@ function viewRenewalStudents() {
     }
   };
 
-  const confirmIncomeVerification = async (verificationStatus) => {
+
+  const confirmCurrentCourseVerification = async (verificationStatus) => {
     try {
-      const response = await updateIncomeDetails(id, verificationStatus);
+      const response = await updateCurrentCourseDetails(id, verificationStatus);
       if (response.success) {
-        setIsIncomeVerified(verificationStatus === 'yes');
+        // Update state correctly based on verification status
+        setIsCurrentCourseVerified(verificationStatus === 'yes');
       }
     } catch (err) {
-      console.error("Error updating income verification status:", err);
+      console.error("Error updating current course verification status:", err);
     } finally {
-      setIsIncomeDialogOpen(false);
+      setIsCurrentCourseDialogOpen(false);
     }
   };
+
+// Confirmation for Hostel Verification
+const confirmHostelVerification = async (verificationStatus) => {
+  try {
+    const response = await updateHostelDetails(id, verificationStatus);
+    if (response.success) {
+      // Update state correctly based on verification status
+      setIsHostelVerified(verificationStatus === 'yes');
+    }
+  } catch (err) {
+    console.error("Error updating hostel verification status:", err);
+  } finally {
+    setIsHostelDialogOpen(false); // Ensure dialog closes after operation
+  }
+};
+
+// Confirmation for Hostel Verification
+const confirmSchemeVerification = async (verificationStatus) => {
+  try {
+    const response = await updateSchemeDetails(id, verificationStatus);
+    if (response.success) {
+      // Update state correctly based on verification status
+      setIsSchemeVerified(verificationStatus === 'yes');
+    }
+  } catch (err) {
+    console.error("Error updating hostel verification status:", err);
+  } finally {
+    setIsSchemeDialogOpen(false); // Ensure dialog closes after operation
+  }
+};
+
+
+
+
 
   const openModalWithId = () => {
     setSelectedId(id);
@@ -111,9 +186,26 @@ function viewRenewalStudents() {
     setIsIncomeModalOpen(true);
   };
 
+  const openCurrentCourseModalWithId = () => {
+    setSelectedId(id);
+    setIsCurrentCourseModalOpen(true);
+  };
+
+
+  const openHostelModalWithId = () => {
+    setSelectedId(id);
+    setIsHostelModalOpen(true);
+  };
+
+  const openSchemeModalWithId = () => {
+    setSelectedId(id);
+    setIsSchemeModalOpen(true);
+  };
+
   return (
     <div>
       <Base>
+
         <Accordion defaultIndex={[0]} allowMultiple>
           <AccordionItem>
             <h2>
@@ -128,28 +220,6 @@ function viewRenewalStudents() {
                 <Button ml={2} colorScheme={isVerified ? "green" : "red"} size="sm" onClick={(e) => handleVerifyClick(e, 'personal')}>
                   {isVerified ? "Verified" : "Not Verified"}
                 </Button>
-
-                {/* <Button
-                  ml="auto"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModalWithId();
-                  }}
-                  colorScheme="blue"
-                  size="sm"
-                >
-                  Edit
-                </Button>
-
-                <Button
-                  ml={2}
-                  colorScheme={isVerified ? "green" : "red"}
-                  size="sm"
-                  onClick={handleVerifyClick}
-                >
-                  {isVerified ? "Verified" : "Not Verified"}
-                </Button> */}
-
                 <AccordionIcon />
               </AccordionButton>
             </h2>
@@ -195,35 +265,6 @@ function viewRenewalStudents() {
             </AccordionPanel>
           </AccordionItem>
 
-        {/* Verification Confirmation Dialog
-        <AlertDialog
-          isOpen={isOpen}
-          leastDestructiveRef={cancelRef}
-          onClose={onClose}
-        >
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Confirm Verification
-              </AlertDialogHeader>
-
-              <AlertDialogBody>
-                Are you sure you want to verify this student?
-              </AlertDialogBody>
-
-              <AlertDialogFooter>
-                <Button ref={cancelRef} onClick={onClose}>
-                  No
-                </Button>
-                <Button colorScheme="green" onClick={confirmVerification} ml={3}>
-                  Yes
-                </Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog> */}
-
-
           <AccordionItem>
             <h2>
             <AccordionButton sx={{ backgroundColor: 'blue.700', color: 'white' }}>
@@ -234,9 +275,9 @@ function viewRenewalStudents() {
                 </Box>
                 
                 <Button ml="auto" onClick={(e) => { e.stopPropagation(); openIncomeModalWithId(); }} colorScheme="blue" size="sm">Edit</Button>
-                <Button ml={2} colorScheme={isIncomeVerified ? "green" : "red"} size="sm" onClick={(e) => handleVerifyClick(e, 'income')}>
-                  {isIncomeVerified ? "Verified" : "Not Verified"}
-                </Button>
+      <Button ml={2} colorScheme={isIncomeVerified ? "green" : "red"} size="sm" onClick={(e) => handleVerifyClick(e, 'income')}>
+        {isIncomeVerified ? "Verified" : "Not Verified"}
+      </Button>
 
                 {/* <button
         style={{
@@ -356,22 +397,6 @@ function viewRenewalStudents() {
                     Current Course
                   </Heading>
                 </Box>
- <Button
-                  ml="auto"
-                  onClick={() => setIsCurrentCourseDialogOpen(true)}
-                  colorScheme="blue"
-                  size="sm"
-                >
-                  Verify
-                </Button>
-                <Button
-                  ml={2}
-                  colorScheme={isCurrentCourseVerified ? "green" : "red"}
-                  size="sm"
-                >
-                  {isCurrentCourseVerified ? "Verified" : "Not Verified"}
-                </Button>
-
                 <button
         style={{
           marginLeft: "auto",
@@ -391,6 +416,11 @@ function viewRenewalStudents() {
       >
         Edit
       </button>
+      <Button ml={2} colorScheme={isCurrentCourseVerified ? "green" : "red"} size="sm" onClick={(e) => handleVerifyClick(e, 'current')}>
+        {isCurrentCourseVerified ? "Verified" : "Not Verified"}
+      </Button>
+       
+       
                 <AccordionIcon />
               </AccordionButton>
             </h2>
@@ -758,25 +788,11 @@ function viewRenewalStudents() {
                     Hostel Details 
                   </Heading>
                 </Box>
-                <button
-        style={{
-          marginLeft: "auto",
-          padding: "5px 10px",
-          fontSize: "14px",
-          backgroundColor: "#3182CE",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-          borderRadius: "4px",
-          zIndex: 2,
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          openHostelModalWithId();
-        }}
-      >
-        Edit
-      </button>
+
+                <Button ml="auto" onClick={(e) => { e.stopPropagation(); openHostelModalWithId(); }} colorScheme="blue" size="sm">Edit</Button>
+      <Button ml={2} colorScheme={isHostelVerified ? "green" : "red"} size="sm" onClick={(e) => handleVerifyClick(e, 'hostel')}>
+        {isHostelVerified ? "Verified" : "Not Verified"}
+      </Button>
                 <AccordionIcon />
               </AccordionButton>
             </h2>
@@ -949,6 +965,10 @@ function viewRenewalStudents() {
       >
         Edit
       </button>
+
+      <Button ml={2} colorScheme={isSchemeVerified ? "green" : "red"} size="sm" onClick={(e) => handleVerifyClick(e, 'scheme')}>
+        {isSchemeVerified ? "Verified" : "Not Verified"}
+      </Button>
                 <AccordionIcon />
               </AccordionButton>
             </h2>
@@ -1080,13 +1100,25 @@ function viewRenewalStudents() {
           onConfirm={confirmCurrentCourseVerification}
         />
 
+        <HostelDialog
+          isOpen={isHostelDialogOpen}
+          onClose={() => setIsHostelDialogOpen(false)}
+          onConfirm={confirmHostelVerification}
+        />
+
+        <SchemeDialog
+          isOpen={isSchemeDialogOpen}
+          onClose={() => setIsSchemeDialogOpen(false)}
+          onConfirm={confirmSchemeVerification}
+        />
+
         <Edit_Prsnl_Renewal_Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} id={selectedId} />
         {/* <Upload_Document_Modal isOpen={isModalOpenUpload} onClose={() => setisModalOpenUpload(false)}  /> */}
         <Edit_Income_Renewal_Modal isOpen={isIncomeModalOpen} onClose={() => setIsIncomeModalOpen(false)} id={selectedId} />
-        {/* <Edit_Current_Course_Renewal_Modal isOpen={isCurrentCourseModalOpen} onClose={() => setIsCurrentCourseModalOpen(false)} id={selectedId} />
+        <Edit_Current_Course_Renewal_Modal isOpen={isCurrentCourseModalOpen} onClose={() => setIsCurrentCourseModalOpen(false)} id={selectedId} />
         <Edit_Hostel_Renewal_Modal isOpen={isHostelModalOpen} onClose={() => setIsHostelModalOpen(false)} id={selectedId} />
-        <Edit_Scheme_Renewal_Modal isOpen={isSchemeModalOpen} onClose={() => setIsSchemeModalOpen(false)} id={selectedId} /> */}
-
+        <Edit_Scheme_Renewal_Modal isOpen={isSchemeModalOpen} onClose={() => setIsSchemeModalOpen(false)} id={selectedId} />
+        
       </Base>
     </div>
   );

@@ -73,6 +73,123 @@ export async function updateIncomeDetails(id, incomeDetails_verified) {
   }
 }
 
+export async function updateCurrentCourseDetails(id, currentCourse_verified) {
+  const { accessToken } = isAuthenticated();
+
+  try {
+    const response = await fetch(`${ENDPOINT}/currentCourseVerified`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({
+        id: id,
+        currentCourse_verified: currentCourse_verified,
+      }),
+    });
+
+    if (response.status === 401) {
+      redirectOnTokenExpire();
+      throw new Error("Token expired");
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating current course details:", error);
+    throw error;
+  }
+}
+
+export async function updateHostelDetails(id, hostelDetails_verified) {
+  const { accessToken } = isAuthenticated();
+
+    // Log the data being sent
+    console.log("Sending data:", {
+      id: id,
+      hostelDetails_verified: hostelDetails_verified,
+    });
+
+  try {
+    const response = await fetch(`${ENDPOINT}/hostelVerified`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({
+        id: id,
+        hostelDetails_verified: hostelDetails_verified,
+      }),
+    });
+
+    if (response.status === 401) {
+      redirectOnTokenExpire();
+      throw new Error("Token expired");
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating hostel details:", error);
+    throw error;
+  }
+}
+
+
+export async function updateSchemeDetails(id, scheme_verified) {
+  const { accessToken } = isAuthenticated(); // Get authentication token
+
+  // Log the data being sent for debugging
+  console.log("Sending data:", {
+    id: id,
+    schemeWise_verified: scheme_verified,
+  });
+
+  try {
+    const response = await fetch(`${ENDPOINT}/schemeVerified`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({
+        id: id,
+        schemeWise_verified: scheme_verified,
+      }),
+    });
+
+    if (response.status === 401) {
+      redirectOnTokenExpire();
+      throw new Error("Token expired");
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating scheme details:", error);
+    throw error;
+  }
+}
+
+
+
 
 
 ///////////////////////////////////////////////////
