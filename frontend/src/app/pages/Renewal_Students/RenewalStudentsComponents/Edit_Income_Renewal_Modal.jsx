@@ -118,7 +118,8 @@ import {
   FormControl,
   FormLabel,
   Input,
-  useToast
+  useToast,
+  Select
 } from "@chakra-ui/react";
 import { editRenewalStudentApi, fetchRecordDetails } from '../../../api/RenewalStudentsApi/RenewalStudentsApi';
 
@@ -210,18 +211,49 @@ const Edit_Income_Renewal_Modal = ({ isOpen, onClose, id }) => {
             <FormLabel>Annual Income</FormLabel>
             <Input name="annualIncome" value={formData.annualIncome} onChange={handleChange} />
           </FormControl>
+
+{/* 
           <FormControl mt={4}>
             <FormLabel>Do you have income certificate?</FormLabel>
             <Input name="incomeCertYesNo" value={formData.incomeCertYesNo} onChange={handleChange} />
+          </FormControl> */}
+          
+
+          <FormControl mt={4}>
+            <FormLabel>Do you have income certificate?</FormLabel>
+            <Select
+              name="incomeCertYesNo"
+              value={formData.incomeCertYesNo}
+              onChange={handleChange}
+            >
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </Select>
           </FormControl>
+
+          
           <FormControl mt={4}>
             <FormLabel>Income Certificate Number</FormLabel>
             <Input name="incomeCertNumber" value={formData.incomeCertNumber} onChange={handleChange} />
           </FormControl>
+
           <FormControl mt={4}>
             <FormLabel>Income Certificate Issuing Authority</FormLabel>
-            <Input name="incomeIssuingAuthority" value={formData.incomeIssuingAuthority} onChange={handleChange} />
+            <Select
+              name="incomeIssuingAuthority"
+              value={formData.incomeIssuingAuthority}
+              onChange={handleChange}
+            >
+              <option value="">Select</option>
+              <option value="Sub Divisional Officer(SDO)">Sub Divisional Officer(SDO)</option>
+              <option value="Tahsildar">Tahsildar</option>
+              <option value="Nayab Tahsildar">Nayab Tahsildar</option>
+              <option value="Sub-Divisional Officer/ Dy. Collector">Sub-Divisional Officer/ Dy. Collector</option>
+              <option value="Executive magistrate">Executive magistrate</option>
+            </Select>
           </FormControl>
+          
           <FormControl mt={4}>
             <FormLabel>Income Certificate Issuing Date</FormLabel>
             <Input type="date" name="incomeIssueDate" value={formData.incomeIssueDate} onChange={handleChange} />
