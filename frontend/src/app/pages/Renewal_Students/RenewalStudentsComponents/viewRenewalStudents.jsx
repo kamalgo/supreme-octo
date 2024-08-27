@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from 'react-router-dom';
+import { useToast } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons"; // Import ExternalLinkIcon from Chakra UI
 import { Box, Heading, SimpleGrid, Text, Button, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from "@chakra-ui/react";
 import Base from "../../../components/Base";
-import { renewalStudentProfileView, updatePersonalInfo, updateIncomeDetails, updateCurrentCourseDetails, 
+import { markLoginUnsuccessful, markLoginSuccessful, renewalStudentProfileView, updatePersonalInfo, updateIncomeDetails, updateCurrentCourseDetails, 
          updateHostelDetails, updateSchemeDetails } from "../../../api/RenewalStudentsApi/RenewalStudentsApi";
 
          import Edit_Prsnl_Renewal_Modal from "./Edit_Prsnl_Renewal_Modal";
@@ -21,6 +22,9 @@ import SchemeDialog from "./verificationDialogs/SchemeDialog";
 
 
 function viewRenewalStudents() {
+  const toast = useToast();  // Initialize toast once for the component
+
+
   const [isVerified, setIsVerified] = useState(false);
   const [isIncomeVerified, setIsIncomeVerified] = useState(false);
   const [isCurrentCourseVerified, setIsCurrentCourseVerified] = useState(false);
@@ -202,9 +206,128 @@ const confirmSchemeVerification = async (verificationStatus) => {
     setIsSchemeModalOpen(true);
   };
 
+
+ // Handle login successful
+//  const handleLoginSuccessful = async () => {
+//   try {
+//     const response = await markLoginSuccessful(id);
+//     if (response.success) {
+//       console.log("Login marked as successful");
+//       // You can show a success message or update the state as needed
+//     }
+//   } catch (err) {
+//     console.error("Error marking login as successful:", err);
+//   }
+// };
+
+
+  // Handle successful login
+  const handleLoginSuccessful = async () => {
+    try {
+      const response = await markLoginSuccessful(id); // Assuming 'id' is defined in your component
+      if (response.success) {
+        toast({
+          title: "Success!",
+          description: "Login marked as successful.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+        console.log("Login marked as successful");
+      } else {
+        toast({
+          title: "Failed!",
+          description: "Could not mark login as successful.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+      }
+    } catch (err) {
+      console.error("Error marking login as successful:", err);
+      toast({
+        title: "Error!",
+        description: "There was an error processing the request.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  };
+
+  // Handle unsuccessful login
+  const handleLoginUnsuccessful = async () => {
+    try {
+      const response = await markLoginUnsuccessful(id); // Assuming 'id' is defined in your component
+      if (response.success) {
+        toast({
+          title: "Success!",
+          description: "Login marked as unsuccessful.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+        console.log("Login marked as unsuccessful");
+      } else {
+        toast({
+          title: "Failed!",
+          description: "Could not mark login as unsuccessful.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+      }
+    } catch (err) {
+      console.error("Error marking login as unsuccessful:", err);
+      toast({
+        title: "Error!",
+        description: "There was an error processing the request.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  };
+
+
+
+
+// // Handle login unsuccessful
+// const handleLoginUnsuccessful = async () => {
+//   try {
+//     const response = await markLoginUnsuccessful(id);
+//     if (response.success) {
+//       console.log("Login marked as unsuccessful");
+//       // You can show a failure message or update the state as needed
+//     }
+//   } catch (err) {
+//     console.error("Error marking login as unsuccessful:", err);
+//   }
+// };
+
+
+
+
   return (
     <div>
       <Base>
+
+      <Box p={4}>
+          <Button colorScheme="green" mr={4} onClick={handleLoginSuccessful}>
+            Mark as Login Successful
+          </Button>
+
+          <Button colorScheme="red" onClick={handleLoginUnsuccessful}>
+            Mark as Login Unsuccessful
+          </Button>
+        </Box>
+
 
         <Accordion defaultIndex={[0]} allowMultiple>
           <AccordionItem>
@@ -258,6 +381,24 @@ const confirmSchemeVerification = async (verificationStatus) => {
                   </Heading>
                   <Text fontSize="md">
                     {viewData?.referenceId === null ? "NA" : viewData?.referenceId}
+                  </Text>
+                </Box>
+
+                <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} p={"10px"}>
+                  <Heading pr={2} as="h5" size="sm">
+                    Alternate Mobile Number
+                  </Heading>
+                  <Text fontSize="md">
+                    {viewData?.alternateMobileNumber === null ? "NA" : viewData?.alternateMobileNumber}
+                  </Text>
+                </Box>
+
+                <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} p={"10px"}>
+                  <Heading pr={2} as="h5" size="sm">
+                    MahaDBT Login
+                  </Heading>
+                  <Text fontSize="md">
+                    {viewData?.mahadbt_Login === null ? "NA" : viewData?.mahadbt_Login}
                   </Text>
                 </Box>
 

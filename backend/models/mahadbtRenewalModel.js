@@ -381,6 +381,12 @@ const RenewalMahadbt = sequelize.define('RenewalMahadbt', {
         allowNull: true,
         field: 'student_verified',
     },
+
+    mahadbt_Login: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'mahadbt_Login',
+    },
     // createdAt: {
     //     type: DataTypes.DATE,
     //     allowNull: true,
@@ -407,6 +413,12 @@ const RenewalMahadbt = sequelize.define('RenewalMahadbt', {
         type: DataTypes.STRING,
         allowNull: true,
         field: 'Dept_Name',
+    },
+
+    mahadbt_Login: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: 'mahadbt_Login',
     },
 
 }, {

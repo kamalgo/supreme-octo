@@ -1,13 +1,17 @@
 const express = require("express");
 const router = express.Router();
 
-const{updateSchemeDetails , updateHostelDetails, updateCurrentCourseDetails, incomeDetails, personalInfo, getAllRenewalStudentsForPageLoad, searchRenewalStudents , getallRenewalStudents, getRenewalStudentDetails, getSingleMahadbtRenewalProfile, updateMahadbtRenewalProfile
+const{markAsUnsuccessful, markAsSuccessful, updateSchemeDetails , updateHostelDetails, updateCurrentCourseDetails, incomeDetails, personalInfo, getAllRenewalStudentsForPageLoad, searchRenewalStudents , getallRenewalStudents, getRenewalStudentDetails, getSingleMahadbtRenewalProfile, updateMahadbtRenewalProfile
      , sendincomeDocS3Renewal, sendfeeReceiptS3Renewal, sendHostelCertToS3Renewal, sendalpabudharakCertS3Renewal,
      sendDeclarationCertToS3Renewal, sendRegisteredLabourCertToS3Renewal, sendStudentPanCardToS3Renewal,
      sendFatherPanCardToS3Renewal, sendFatherAadharCardToS3Renewal, sendCasteValidityToS3Renewal, sendAllotmentLetterToS3Renewal,
      sendLeavingCertToS3Renewal, sendRationCardToS3Renewal, sendPreviousYearMarksheetToS3Renewal,
      sendGapCertToS3Renewal
      } = require("../controllers/renewalStudentsController");
+
+
+router.post("/markAsSuccessful",markAsSuccessful);
+router.post("/markAsUnsuccessful",markAsUnsuccessful);
 
 //verified section 
 router.post("/personalInfoVerified",personalInfo);

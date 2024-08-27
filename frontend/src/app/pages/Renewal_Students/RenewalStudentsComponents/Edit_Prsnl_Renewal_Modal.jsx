@@ -254,6 +254,12 @@ const Edit_Prsnl_Renewal_Modal = ({ isOpen, onClose, id }) => {
             <FormLabel>College Reference Id</FormLabel>
             <Input name="referenceId" type="tel" value={formData.referenceId} onChange={handleChange} />
           </FormControl>
+
+          <FormControl id="alternateMobileNumber" mb={4}>
+            <FormLabel>Alternate Mobile Number</FormLabel>
+            <Input name="alternateMobileNumber" type="tel" value={formData.alternateMobileNumber} onChange={handleChange} />
+          </FormControl>
+
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={onClose}>

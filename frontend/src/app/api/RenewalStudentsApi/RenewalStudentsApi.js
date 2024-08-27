@@ -3,6 +3,76 @@ import { redirectOnTokenExpire } from "../Auth";
 
 const ENDPOINT = import.meta.env.VITE_BACKEND_ENDPOINT;
 
+
+//Mark As Login Section
+
+export async function markLoginSuccessful(id) {
+  const { accessToken } = isAuthenticated();
+
+  try {
+    const response = await fetch(`${ENDPOINT}/markAsSuccessful`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: accessToken,  // Include access token for authorization
+      },
+      body: JSON.stringify({
+        id: id,  // Only sending the `id`
+      }),
+    });
+
+    if (response.status === 401) {
+      redirectOnTokenExpire();
+      throw new Error("Token expired");
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;  // Return the response data
+  } catch (error) {
+    console.error("Error marking as successful:", error);
+    throw error;
+  }
+}
+
+export async function markLoginUnsuccessful(id) {
+  const { accessToken } = isAuthenticated();
+
+  try {
+    const response = await fetch(`${ENDPOINT}/markAsUnsuccessful`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: accessToken,  // Include access token for authorization
+      },
+      body: JSON.stringify({
+        id: id,  // Only sending the `id`
+      }),
+    });
+
+    if (response.status === 401) {
+      redirectOnTokenExpire();
+      throw new Error("Token expired");
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;  // Return the response data
+  } catch (error) {
+    console.error("Error marking as successful:", error);
+    throw error;
+  }
+}
+
+
 //verification section
 ////////////////////////////////////////////////////
 export async function updatePersonalInfo(id, personalInfo_verified) {
